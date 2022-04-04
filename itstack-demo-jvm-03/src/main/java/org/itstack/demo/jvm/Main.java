@@ -2,9 +2,14 @@ package org.itstack.demo.jvm;
 
 import org.itstack.demo.jvm.classfile.ClassFile;
 import org.itstack.demo.jvm.classfile.MemberInfo;
+import org.itstack.demo.jvm.classfile.attributes.AttributeInfo;
+import org.itstack.demo.jvm.classfile.constantpool.ConstantInfo;
 import org.itstack.demo.jvm.classpath.Classpath;
+import org.itstack.demo.jvm.lzc.Jad;
+import org.itstack.demo.jvm.lzc.JdkUtil;
 
 import java.util.Arrays;
+import java.util.stream.IntStream;
 
 /**
  * http://www.itstack.org
@@ -29,8 +34,7 @@ public class Main {
 
     private static void startJVM(Cmd cmd) {
         Classpath classpath = new Classpath(cmd.jre, cmd.classpath);
-        System.out.printf("classpath：%s class：%s args：%s\n",
-                classpath, cmd.getMainClass(), cmd.getAppArgs());
+        System.out.printf("classpath：%s class：%s args：%s\n", classpath, cmd.getMainClass(), cmd.getAppArgs());
         //获取className
         String className = cmd.getMainClass().replace(".", "/");
         ClassFile classFile = loadClass(className, classpath);
@@ -49,21 +53,53 @@ public class Main {
     }
 
     private static void printClassInfo(ClassFile cf) {
-        System.out.println("version: " + cf.majorVersion() + "." + cf.minorVersion());
-        System.out.println("constants count：" + cf.constantPool().getSiz());
+        System.out.println("version: " + cf.majorVersion() + "." + cf.minorVersion() + ",readable version:" + JdkUtil.getVersion(cf.majorVersion()));
+
+        System.out.println("constants size：" + cf.constantPool().getSiz());
+        printSplit();
+        ConstantInfo[] constantInfos = cf.constantPool().getConstantInfos();
+        for (int i = 0, constantInfosLength = constantInfos.length; i < constantInfosLength; i++) {
+            ConstantInfo constantInfo = constantInfos[i];
+            System.out.println("constants[" + i + "]    :" + constantInfo);
+        }
+        printSplit();
+
         System.out.format("access flags：0x%x\n", cf.accessFlags());
         System.out.println("this class：" + cf.className());
         System.out.println("super class：" + cf.superClassName());
         System.out.println("interfaces：" + Arrays.toString(cf.interfaceNames()));
         System.out.println("fields count：" + cf.fields().length);
+        printSplit();
         for (MemberInfo memberInfo : cf.fields()) {
-            System.out.format("%s \t\t %s\n", memberInfo.name(), memberInfo.descriptor());
+            System.out.format("fieldName:%s \t\t, fieldType: %s, memberInfo: %s\n", memberInfo.name(), memberInfo.descriptor(), memberInfo);
         }
+        printSplit();
 
         System.out.println("methods count: " + cf.methods().length);
+        printSplit();
         for (MemberInfo memberInfo : cf.methods()) {
-            System.out.format("%s \t\t %s\n", memberInfo.name(), memberInfo.descriptor());
+            System.out.format("methodName:%s \t\t, methodType:%s, memberInfo: %s\n", memberInfo.name(), memberInfo.descriptor(), memberInfo);
         }
+        printSplit();
+
+        System.out.println("attributes count: " + cf.attributes().length);
+        printSplit();
+        for (AttributeInfo memberInfo : cf.attributes()) {
+            System.out.format("attribute:%s  \n", memberInfo);
+        }
+        printSplit();
+
+        Jad.deCompile(cf);
     }
 
+
+    private static void printSplit() {
+        IntStream.range(0, 10).boxed().forEach(i -> {
+            if (i < 9) {
+                System.out.print("-");
+            } else {
+                System.out.println();
+            }
+        });
+    }
 }

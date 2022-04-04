@@ -3,6 +3,8 @@ package org.itstack.demo.jvm.classfile.attributes.impl;
 import org.itstack.demo.jvm.classfile.ClassReader;
 import org.itstack.demo.jvm.classfile.attributes.AttributeInfo;
 
+import java.util.Arrays;
+
 /**
  * http://www.itstack.org
  * create by fuzhengwei on 2019/4/26
@@ -35,6 +37,23 @@ public class LocalVariableTableAttribute implements AttributeInfo {
             this.descriptorIdx = descriptorIdx;
             this.idx = idx;
         }
+
+        @Override
+        public String toString() {
+            return "LocalVariableTableEntry{" +
+                    "startPC=" + startPC +
+                    ", length=" + length +
+                    ", nameIdx=" + nameIdx +
+                    ", descriptorIdx=" + descriptorIdx +
+                    ", idx=" + idx +
+                    '}';
+        }
     }
 
+    @Override
+    public String toString() {
+        return "LocalVariableTableAttribute{" +
+                "localVariableTable=" + Arrays.toString(localVariableTable) +
+                '}';
+    }
 }

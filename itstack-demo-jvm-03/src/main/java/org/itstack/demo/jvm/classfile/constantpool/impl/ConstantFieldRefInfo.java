@@ -17,4 +17,14 @@ public class ConstantFieldRefInfo extends ConstantMemberRefInfo {
         return this.CONSTANT_TAG_FIELDREF;
     }
 
+    @Override
+    public String toString() {
+        return "ConstantFieldRefInfo{" +
+                "tag=" + tag() +
+                ", classIdx=" + classIdx +
+                ", nameAndTypeIdx=" + nameAndTypeIdx +
+                ", className=" + this.className() +
+                ", nameAndDescriptor=" + this.nameAndDescriptor() +
+                '}';
+    }
 }

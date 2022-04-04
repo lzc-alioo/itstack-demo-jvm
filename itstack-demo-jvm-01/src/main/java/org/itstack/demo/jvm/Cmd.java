@@ -38,11 +38,11 @@ public class Cmd {
     }
 
     static Cmd parse(String[] argv) {
-        Cmd args = new Cmd();
-        JCommander cmd = JCommander.newBuilder().addObject(args).build();
-        cmd.parse(argv);
-        args.ok = true;
-        return args;
+        Cmd cmd = new Cmd();
+        JCommander jCommander = JCommander.newBuilder().addObject(cmd).build();
+        jCommander.parse(argv);
+        cmd.ok = true;
+        return cmd;
     }
     
 }

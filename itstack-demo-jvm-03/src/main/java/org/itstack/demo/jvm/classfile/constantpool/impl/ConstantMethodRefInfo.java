@@ -16,4 +16,16 @@ public class ConstantMethodRefInfo extends ConstantMemberRefInfo {
     public int tag() {
         return this.CONSTANT_TAG_METHODREF;
     }
+
+    @Override
+    public String toString() {
+        return "ConstantMethodRefInfo{" +
+                "tag=" + tag() +
+                ", classIdx=" + classIdx +
+                ", nameAndTypeIdx=" + nameAndTypeIdx +
+                ", className=" + this.className() +
+                ", nameAndDescriptor=" + this.nameAndDescriptor() +
+                '}';
+    }
+
 }

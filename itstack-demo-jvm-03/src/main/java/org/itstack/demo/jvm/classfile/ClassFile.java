@@ -105,4 +105,7 @@ public class ClassFile {
         return interfaceNames;
     }
 
+    public AttributeInfo[] attributes() {
+        return attributes;
+    }
 }

@@ -23,4 +23,12 @@ public class ConstantNameAndTypeInfo implements ConstantInfo {
         return this.CONSTANT_TAG_NAMEANDTYPE;
     }
 
+    @Override
+    public String toString() {
+        return "ConstantNameAndTypeInfo{" +
+                "tag=" + tag() +
+                ", nameIdx=" + nameIdx +
+                ", descIdx=" + descIdx +
+                '}';
+    }
 }

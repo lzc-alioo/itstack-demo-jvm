@@ -25,4 +25,12 @@ public class ConstantIntegerInfo implements ConstantInfo {
         return this.val;
     }
 
+
+    @Override
+    public String toString() {
+        return "ConstantIntegerInfo{" +
+                "tag=" + tag() +
+                ", val=" + val +
+                '}';
+    }
 }

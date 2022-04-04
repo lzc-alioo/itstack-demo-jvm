@@ -5,9 +5,9 @@ package org.itstack.demo.jvm.lzc;
  * @time: 2022/3/30 23:12
  * @description:
  */
-public class JdkVersionUtil {
+public class JdkUtil {
 
-    public String getVersion(int majorVersion) {
+    public static String getVersion(int majorVersion) {
         String version = null;
 
         switch (majorVersion) {

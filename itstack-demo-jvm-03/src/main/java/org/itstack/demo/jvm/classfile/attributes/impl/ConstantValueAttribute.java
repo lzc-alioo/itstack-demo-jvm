@@ -20,4 +20,10 @@ public class ConstantValueAttribute implements AttributeInfo {
         return this.constantValueIdx;
     }
 
+    @Override
+    public String toString() {
+        return "ConstantValueAttribute{" +
+                "constantValueIdx=" + constantValueIdx +
+                '}';
+    }
 }

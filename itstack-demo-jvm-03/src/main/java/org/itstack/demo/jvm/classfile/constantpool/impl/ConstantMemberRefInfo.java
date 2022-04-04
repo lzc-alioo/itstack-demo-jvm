@@ -14,7 +14,7 @@ public class ConstantMemberRefInfo implements ConstantInfo {
 
     protected ConstantPool constantPool;
     protected int classIdx;
-    private int nameAndTypeIdx;
+    protected int nameAndTypeIdx;
 
     ConstantMemberRefInfo(ConstantPool constantPool) {
         this.constantPool = constantPool;
@@ -39,4 +39,14 @@ public class ConstantMemberRefInfo implements ConstantInfo {
         return this.constantPool.getNameAndType(this.nameAndTypeIdx);
     }
 
+    @Override
+    public String toString() {
+        return "ConstantMemberRefInfo{" +
+                "tag=" + tag() +
+                ", classIdx=" + classIdx +
+                ", nameAndTypeIdx=" + nameAndTypeIdx +
+                ", className=" + this.className() +
+                ", nameAndDescriptor=" + this.nameAndDescriptor() +
+                '}';
+    }
 }

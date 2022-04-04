@@ -3,6 +3,8 @@ package org.itstack.demo.jvm.classfile.attributes.impl;
 import org.itstack.demo.jvm.classfile.ClassReader;
 import org.itstack.demo.jvm.classfile.attributes.AttributeInfo;
 
+import java.util.Arrays;
+
 /**
  * http://www.itstack.org
  * create by fuzhengwei on 2019/4/26
@@ -39,6 +41,19 @@ public class LineNumberTableAttribute implements AttributeInfo {
             this.lineNumber = lineNumber;
         }
 
+        @Override
+        public String toString() {
+            return "LineNumberTableEntry{" +
+                    "startPC=" + startPC +
+                    ", lineNumber=" + lineNumber +
+                    '}';
+        }
     }
 
+    @Override
+    public String toString() {
+        return "LineNumberTableAttribute{" +
+                "lineNumberTable=" + Arrays.toString(lineNumberTable) +
+                '}';
+    }
 }

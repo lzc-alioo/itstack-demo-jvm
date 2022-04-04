@@ -26,4 +26,11 @@ public class SourceFileAttribute implements AttributeInfo {
         return this.constantPool.getUTF8(this.sourceFileIdx);
     }
 
+    @Override
+    public String toString() {
+        return "SourceFileAttribute{" +
+                "sourceFileIdx=" + sourceFileIdx +
+                ",fileName=" + fileName() +
+                '}';
+    }
 }

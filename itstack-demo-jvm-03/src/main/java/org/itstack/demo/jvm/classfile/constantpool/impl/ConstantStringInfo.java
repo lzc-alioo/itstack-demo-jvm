@@ -31,5 +31,11 @@ public class ConstantStringInfo implements ConstantInfo {
         return this.constantPool.getUTF8(this.strIdx);
     }
 
-
+    @Override
+    public String toString() {
+        return "ConstantStringInfo{" +
+                "strIdx=" + strIdx +
+                ", string=" + string() +
+                '}';
+    }
 }

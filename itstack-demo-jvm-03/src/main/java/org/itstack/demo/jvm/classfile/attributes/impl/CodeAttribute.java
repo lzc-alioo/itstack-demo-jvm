@@ -4,6 +4,8 @@ import org.itstack.demo.jvm.classfile.ClassReader;
 import org.itstack.demo.jvm.classfile.attributes.AttributeInfo;
 import org.itstack.demo.jvm.classfile.constantpool.ConstantPool;
 
+import java.util.Arrays;
+
 /**
  * http://www.itstack.org
  * create by fuzhengwei on 2019/4/26
@@ -90,6 +92,25 @@ public class CodeAttribute implements AttributeInfo {
             return this.catchType;
         }
 
+        @Override
+        public String toString() {
+            return "ExceptionTableEntry{" +
+                    "startPC=" + startPC +
+                    ", endPC=" + endPC +
+                    ", handlerPC=" + handlerPC +
+                    ", catchType=" + catchType +
+                    '}';
+        }
     }
 
+    @Override
+    public String toString() {
+        return "CodeAttribute{" +
+                "maxStack=" + maxStack +
+                ", maxLocals=" + maxLocals +
+                ", data=" + Arrays.toString(data) +
+                ", exceptionTable=" + Arrays.toString(exceptionTable) +
+                ", attributes=" + Arrays.toString(attributes) +
+                '}';
+    }
 }

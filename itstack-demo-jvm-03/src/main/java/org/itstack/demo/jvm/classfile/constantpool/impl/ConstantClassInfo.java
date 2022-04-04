@@ -31,4 +31,13 @@ public class ConstantClassInfo implements ConstantInfo {
         return this.CONSTANT_TAG_CLASS;
     }
 
+    @Override
+    public String toString() {
+        return "ConstantClassInfo{" +
+                "tag=" + tag() +
+                ", nameIdx=" + nameIdx +
+                ", name=" + this.name() +
+                '}';
+    }
+
 }

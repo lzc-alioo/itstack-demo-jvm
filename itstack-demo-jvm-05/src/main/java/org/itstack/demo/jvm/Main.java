@@ -35,12 +35,32 @@ public class Main {
         System.out.printf("classpath:%s class:%s args:%s\n", classpath, cmd.getMainClass(), cmd.getAppArgs());
         String className = cmd.getMainClass().replace(".", "/");
         ClassFile classFile = loadClass(className, classpath);
+        printClassInfo(classFile);
+
         MemberInfo mainMethod = getMainMethod(classFile);
         if (null == mainMethod) {
             System.out.println("Main method not found in class " + cmd.classpath);
             return;
         }
         new Interpret(mainMethod);
+    }
+
+    private static void printClassInfo(ClassFile cf) {
+        System.out.println("version: " + cf.majorVersion() + "." + cf.minorVersion());
+        System.out.println("constants count：" + cf.constantPool().getSize());
+        System.out.format("access flags：0x%x\n", cf.accessFlags());
+        System.out.println("this class：" + cf.className());
+        System.out.println("super class：" + cf.superClassName());
+        System.out.println("interfaces：" + Arrays.toString(cf.interfaceNames()));
+        System.out.println("fields count：" + cf.fields().length);
+        for (MemberInfo memberInfo : cf.fields()) {
+            System.out.format("%s \t\t %s\n", memberInfo.name(), memberInfo.descriptor());
+        }
+
+        System.out.println("methods count: " + cf.methods().length);
+        for (MemberInfo memberInfo : cf.methods()) {
+            System.out.format("%s \t\t %s\n", memberInfo.name(), memberInfo.descriptor());
+        }
     }
 
     private static ClassFile loadClass(String className, Classpath cp) {

@@ -5,6 +5,8 @@ import org.itstack.demo.jvm.classfile.attributes.impl.CodeAttribute;
 import org.itstack.demo.jvm.classfile.attributes.impl.ConstantValueAttribute;
 import org.itstack.demo.jvm.classfile.constantpool.ConstantPool;
 
+import java.util.Arrays;
+
 /**
  * http://www.itstack.org
  * create by fuzhengwei on 2019/4/26
@@ -60,4 +62,16 @@ public class MemberInfo {
         return null;
     }
 
+    @Override
+    public String toString() {
+        return "MemberInfo{" +
+                "accessFlags=" + accessFlags +
+                ", nameIdx=" + nameIdx +
+                ", descriptorIdx=" + descriptorIdx +
+                ", attributes=" + Arrays.toString(attributes) +
+                ", accessFlags=" + accessFlags()+
+                ", name=" + name()+
+                ", descriptor=" + descriptor()+
+                '}';
+    }
 }
