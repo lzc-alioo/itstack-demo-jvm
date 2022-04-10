@@ -5,8 +5,6 @@ import org.itstack.demo.jvm.classfile.MemberInfo;
 import org.itstack.demo.jvm.classfile.attributes.AttributeInfo;
 import org.itstack.demo.jvm.classfile.constantpool.ConstantInfo;
 import org.itstack.demo.jvm.classpath.Classpath;
-import org.itstack.demo.jvm.lzc.Jad;
-import org.itstack.demo.jvm.lzc.JdkUtil;
 
 import java.util.Arrays;
 import java.util.stream.IntStream;
@@ -53,7 +51,7 @@ public class Main {
     }
 
     private static void printClassInfo(ClassFile cf) {
-        System.out.println("version: " + cf.majorVersion() + "." + cf.minorVersion() + ",readable version:" + JdkUtil.getVersion(cf.majorVersion()));
+        System.out.println("version: " + cf.majorVersion() + "." + cf.minorVersion()  );
 
         System.out.println("constants size：" + cf.constantPool().getSiz());
         printSplit();
@@ -89,7 +87,6 @@ public class Main {
         }
         printSplit();
 
-        Jad.deCompile(cf);
     }
 
 
