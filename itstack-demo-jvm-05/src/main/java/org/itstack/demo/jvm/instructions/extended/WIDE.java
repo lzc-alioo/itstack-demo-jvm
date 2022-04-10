@@ -2,8 +2,6 @@ package org.itstack.demo.jvm.instructions.extended;
 
 import org.itstack.demo.jvm.instructions.base.BytecodeReader;
 import org.itstack.demo.jvm.instructions.base.Instruction;
-import org.itstack.demo.jvm.instructions.loads.aload.ALOAD;
-import org.itstack.demo.jvm.instructions.loads.dload.DLOAD;
 import org.itstack.demo.jvm.instructions.loads.fload.FLOAD;
 import org.itstack.demo.jvm.instructions.loads.iload.ILOAD;
 import org.itstack.demo.jvm.instructions.loads.lload.LLOAD;
@@ -35,14 +33,14 @@ public class WIDE implements Instruction {
                 FLOAD inst_fload = new FLOAD();
                 inst_fload.idx = reader.readShort();
                 this.modifiedInstruction = inst_fload;
-            case 0x18:
-                DLOAD inst_dload = new DLOAD();
-                inst_dload.idx = reader.readShort();
-                this.modifiedInstruction = inst_dload;
-            case 0x19:
-                ALOAD inst_aload = new ALOAD();
-                inst_aload.idx = reader.readShort();
-                this.modifiedInstruction = inst_aload;
+//            case 0x18:
+//                DLOAD inst_dload = new DLOAD();
+//                inst_dload.idx = reader.readShort();
+//                this.modifiedInstruction = inst_dload;
+//            case 0x19:
+//                ALOAD inst_aload = new ALOAD();
+//                inst_aload.idx = reader.readShort();
+//                this.modifiedInstruction = inst_aload;
             case 0x36:
                 ISTORE inst_istore = new ISTORE();
                 inst_istore.idx = reader.readShort();

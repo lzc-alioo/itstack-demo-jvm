@@ -20,8 +20,6 @@ import org.itstack.demo.jvm.instructions.conversions.l2x.*;
 import org.itstack.demo.jvm.instructions.extended.GOTO_W;
 import org.itstack.demo.jvm.instructions.extended.WIDE;
 import org.itstack.demo.jvm.instructions.extended.ifnull.*;
-import org.itstack.demo.jvm.instructions.loads.aload.*;
-import org.itstack.demo.jvm.instructions.loads.dload.*;
 import org.itstack.demo.jvm.instructions.loads.fload.*;
 import org.itstack.demo.jvm.instructions.loads.iload.*;
 import org.itstack.demo.jvm.instructions.loads.lload.*;
@@ -100,10 +98,10 @@ public class Factory {
                 return new LLOAD();
             case 0x17:
                 return new FLOAD();
-            case 0x18:
-                return new DLOAD();
-            case 0x19:
-                return new ALOAD();
+//            case 0x18:
+//                return new DLOAD();
+//            case 0x19:
+//                return new ALOAD();
             case 0x1a:
                 return new ILOAD_0();
             case 0x1b:
@@ -128,22 +126,22 @@ public class Factory {
                 return new FLOAD_2();
             case 0x25:
                 return new FLOAD_3();
-            case 0x26:
-                return new DLOAD_0();
-            case 0x27:
-                return new DLOAD_1();
-            case 0x28:
-                return new DLOAD_2();
-            case 0x29:
-                return new DLOAD_3();
-            case 0x2a:
-                return new ALOAD_0();
-            case 0x2b:
-                return new ALOAD_1();
-            case 0x2c:
-                return new ALOAD_2();
-            case 0x2d:
-                return new ALOAD_3();
+//            case 0x26:
+//                return new DLOAD_0();
+//            case 0x27:
+//                return new DLOAD_1();
+//            case 0x28:
+//                return new DLOAD_2();
+//            case 0x29:
+//                return new DLOAD_3();
+//            case 0x2a:
+//                return new ALOAD_0();
+//            case 0x2b:
+//                return new ALOAD_1();
+//            case 0x2c:
+//                return new ALOAD_2();
+//            case 0x2d:
+//                return new ALOAD_3();
             // case 0x2e:
             // 	return iaload
             // case 0x2f:

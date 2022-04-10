@@ -2,6 +2,7 @@ package org.itstack.demo.jvm.instructions.base;
 
 import org.itstack.demo.jvm.rtda.Frame;
 import org.itstack.demo.jvm.rtda.OperandStack;
+import org.itstack.demo.jvm.rtda.heap.methodarea.Object;
 
 public class InstructionNoOperands implements Instruction {
     @Override
