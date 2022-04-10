@@ -5,7 +5,7 @@ package org.itstack.demo.jvm.lzc;
  * @time: 2022/4/2 16:52
  * @description:
  */
-public class DescriptorUtil {
+public class FieldDescriptorUtil {
     public static String getDescriptorStr(String descriptor) {
         StringBuilder buf = new StringBuilder();
         if ("B".equals(descriptor)) {
@@ -16,7 +16,8 @@ public class DescriptorUtil {
         }
         if ("I".equals(descriptor)) {
             return "int ";
-        } if ("Ljava/lang/Integer;".equals(descriptor)) {
+        }
+        if ("Ljava/lang/Integer;".equals(descriptor)) {
             return "Integer ";
         }
 
