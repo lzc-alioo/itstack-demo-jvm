@@ -1,5 +1,6 @@
 package org.itstack.demo.jvm.rtda;
 
+import lombok.Data;
 import org.itstack.demo.jvm.rtda.heap.methodarea.Method;
 
 /**
@@ -60,4 +61,39 @@ public class Frame {
         this.nextPC = this.thread.pc();
     }
 
+
+    public Frame getLower() {
+        return lower;
+    }
+
+    public LocalVars getLocalVars() {
+        return localVars;
+    }
+
+    public OperandStack getOperandStack() {
+        return operandStack;
+    }
+
+    public Thread getThread() {
+        return thread;
+    }
+
+    public Method getMethod() {
+        return method;
+    }
+
+    public int getNextPC() {
+        return nextPC;
+    }
+
+    @Override
+    public String toString() {
+        return "Frame{" +
+//                "\nlower=" + lower +
+                "\n, localVars=" + localVars +
+                "\n, operandStack=" + operandStack +
+                "\n, method=" + method +
+                "\n, nextPC=" + nextPC +
+                '}';
+    }
 }

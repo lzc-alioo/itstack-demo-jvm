@@ -4,6 +4,7 @@ import org.itstack.demo.jvm.classfile.MemberInfo;
 import org.itstack.demo.jvm.classfile.attributes.impl.CodeAttribute;
 import org.itstack.demo.jvm.rtda.heap.constantpool.AccessFlags;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class Method extends ClassMember {
@@ -122,4 +123,15 @@ public class Method extends ClassMember {
         return this.argSlotCount;
     }
 
+    @Override
+    public String toString() {
+        return "Method{" +
+                "name='" + name + '\'' +
+                ", clazz=" + clazz.name +
+                ", maxStack=" + maxStack +
+                ", maxLocals=" + maxLocals +
+                ", code=" + Arrays.toString(code) +
+                ", argSlotCount=" + argSlotCount +
+                '}';
+    }
 }

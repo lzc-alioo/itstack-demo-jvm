@@ -20,4 +20,11 @@ public class ConstantValueAttribute implements AttributeInfo {
         return this.constantValueIdx;
     }
 
+    public int getConstantValueIdx() {
+        return constantValueIdx;
+    }
+
+    public void setConstantValueIdx(int constantValueIdx) {
+        this.constantValueIdx = constantValueIdx;
+    }
 }

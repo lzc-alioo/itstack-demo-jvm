@@ -2,6 +2,8 @@ package org.itstack.demo.jvm.rtda;
 
 import org.itstack.demo.jvm.rtda.heap.methodarea.Object;
 
+import java.util.Arrays;
+
 /**
  * http://www.itstack.org
  * create by fuzhengwei on 2019/4/26
@@ -74,5 +76,12 @@ public class LocalVars {
 
     public Slot[] getSlots() {
         return slots;
+    }
+
+    @Override
+    public String toString() {
+        return "LocalVars{" +
+                "slots=" + Arrays.toString(slots) +
+                '}';
     }
 }

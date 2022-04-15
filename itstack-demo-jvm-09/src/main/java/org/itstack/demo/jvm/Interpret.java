@@ -1,5 +1,6 @@
 package org.itstack.demo.jvm;
 
+import com.alibaba.fastjson.JSON;
 import org.itstack.demo.jvm._native.Registry;
 import org.itstack.demo.jvm.instructions.Factory;
 import org.itstack.demo.jvm.instructions.base.BytecodeReader;
@@ -76,8 +77,10 @@ class Interpret {
         String className = method.clazz().name();
         String methodName = method.name();
         String outStr = (className + "." + methodName + "() \t") +
-                "寄存器(指令)：" + byteToHexString(new byte[]{opcode}) +
-                " -> " + inst.getClass().getSimpleName();
+                "寄存器(指令)：" + byteToHexString(new byte[]{opcode}) +"("+opcode+")"+
+                " -> " + inst.getClass().getSimpleName()+
+//                " -> " + JSON.toJSONString(frame);
+                " -> " + frame.toString();
         System.out.println(outStr);
     }
 

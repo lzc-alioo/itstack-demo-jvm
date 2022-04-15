@@ -20,6 +20,10 @@ public class LocalVariableTableAttribute implements AttributeInfo {
         }
     }
 
+    public LocalVariableTableEntry[] getLocalVariableTable() {
+        return localVariableTable;
+    }
+
     static class LocalVariableTableEntry {
 
         private int startPC;
@@ -34,6 +38,26 @@ public class LocalVariableTableAttribute implements AttributeInfo {
             this.nameIdx = nameIdx;
             this.descriptorIdx = descriptorIdx;
             this.idx = idx;
+        }
+
+        public int getStartPC() {
+            return startPC;
+        }
+
+        public int getLength() {
+            return length;
+        }
+
+        public int getNameIdx() {
+            return nameIdx;
+        }
+
+        public int getDescriptorIdx() {
+            return descriptorIdx;
+        }
+
+        public int getIdx() {
+            return idx;
         }
     }
 

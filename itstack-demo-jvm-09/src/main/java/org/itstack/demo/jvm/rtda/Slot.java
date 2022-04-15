@@ -12,4 +12,11 @@ public class Slot {
     public int num;
     public Object ref;
 
+    @Override
+    public String toString() {
+        return "Slot{" +
+                "num=" + num +
+                ", ref=" + ref +
+                '}';
+    }
 }
