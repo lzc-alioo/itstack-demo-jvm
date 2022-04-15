@@ -75,7 +75,10 @@ public class OperandStack {
     }
 
     public void pushSlot(Slot slot) {
-        this.slots[this.size] = slot;
+        Slot slotClone = new Slot();
+        slotClone.num = slot.num;
+        slotClone.ref = slot.ref;
+        this.slots[this.size] = slotClone;
         this.size++;
     }
 
@@ -86,6 +89,14 @@ public class OperandStack {
 
     public Object getRefFromTop(int n) {
         return this.slots[this.size - 1 - n].ref;
+    }
+
+    public void pushBoolean(boolean val) {
+        if (val) {
+            this.pushInt(1);
+        } else {
+            this.pushInt(0);
+        }
     }
 
     public Slot[] getSlots() {

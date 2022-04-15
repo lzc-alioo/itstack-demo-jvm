@@ -19,7 +19,7 @@ public class ConstantFieldRefInfo extends ConstantMemberRefInfo {
 
     @Override
     public String toString() {
-        return "ConstantFieldRefInfo{" +
+        return "ConstantFieldRefInfo     {" +
                 "tag=" + tag() +
                 ", classIdx=" + classIdx +
                 ", nameAndTypeIdx=" + nameAndTypeIdx +

@@ -1,6 +1,5 @@
 package org.itstack.demo.jvm.lzc;
 
-import org.itstack.demo.jvm.classfile.MemberInfo;
 import org.itstack.demo.jvm.rtda.heap.methodarea.Method;
 
 import java.util.Iterator;
@@ -19,17 +18,17 @@ import static java.util.regex.Pattern.compile;
  */
 public class MethodDescriptorUtil {
 
-    public static MethodInfo getMethodInfo(Method memberInfo, String simpleClassName) {
-        return getMethodInfo(memberInfo.name(),memberInfo.descriptor(),simpleClassName);
+    public static MethodInfo getMethodInfo(Method memberInfo, String simpleClassName, boolean isClinitMethod) {
+        return getMethodInfo(memberInfo.name(), memberInfo.descriptor(), simpleClassName, isClinitMethod);
     }
 
 
+//
+//    public static MethodInfo getMethodInfo(MemberInfo memberInfo, String simpleClassName) {
+//        return getMethodInfo(memberInfo.name(),memberInfo.descriptor(),simpleClassName);
+//    }
 
-    public static MethodInfo getMethodInfo(MemberInfo memberInfo, String simpleClassName) {
-        return getMethodInfo(memberInfo.name(),memberInfo.descriptor(),simpleClassName);
-    }
-
-    public static MethodInfo getMethodInfo(String originMethodName,String descriptor, String simpleClassName) {
+    public static MethodInfo getMethodInfo(String originMethodName, String descriptor, String simpleClassName, boolean isClinitMethod) {
         String methodName = readAbleMethodName(originMethodName, simpleClassName);
         boolean isConstruction = methodName.equals(simpleClassName) ? true : false;
 
@@ -42,11 +41,29 @@ public class MethodDescriptorUtil {
         String paramType = matcher.group(1);
         String valueType = matcher.group(2);
 
+        if (isClinitMethod) {
+            MethodInfo methodInfo = MethodInfo.builder()
+                    .methodName("{}")
+                    .isConstruction(false)
+                    .paramType("")
+                    .valueType("")
+                    .build();
+            return methodInfo;
+        } else if (isConstruction) {
+            MethodInfo methodInfo = MethodInfo.builder()
+                    .methodName(methodName)
+                    .isConstruction(true)
+                    .paramType(readAbleParamType(paramType))
+                    .valueType("")
+                    .build();
+            return methodInfo;
+        }
+
         MethodInfo methodInfo = MethodInfo.builder()
                 .methodName(methodName)
                 .isConstruction(isConstruction)
                 .paramType(readAbleParamType(paramType))
-                .valueType(isConstruction ? "" : readAbleValueType(valueType))
+                .valueType(readAbleValueType(valueType))
                 .build();
 
         return methodInfo;
@@ -56,6 +73,9 @@ public class MethodDescriptorUtil {
     public static String readAbleMethodName(String methodName, String simpleClassName) {
         if ("<init>".equals(methodName)) {
             return simpleClassName;
+        }
+        if ("<clinit>".equals(methodName)) {
+            return "";
         }
         return methodName;
     }
@@ -82,7 +102,7 @@ public class MethodDescriptorUtil {
 
     private static String readAbleValueType(String valueType) {
         if ("V".equals(valueType)) {
-            return "void";
+            return "void ";
         }
         return valueType;
     }

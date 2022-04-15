@@ -19,7 +19,7 @@ public class ConstantMethodRefInfo extends ConstantMemberRefInfo {
 
     @Override
     public String toString() {
-        return "ConstantMethodRefInfo{" +
+        return "ConstantMethodRefInfo    {" +
                 "tag=" + tag() +
                 ", classIdx=" + classIdx +
                 ", nameAndTypeIdx=" + nameAndTypeIdx +

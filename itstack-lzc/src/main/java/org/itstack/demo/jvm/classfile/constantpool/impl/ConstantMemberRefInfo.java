@@ -13,8 +13,8 @@ import java.util.Map;
 public class ConstantMemberRefInfo implements ConstantInfo {
 
     protected ConstantPool constantPool;
-    protected int classIdx;
-    protected int nameAndTypeIdx;
+    public int classIdx;
+    public int nameAndTypeIdx;
 
     ConstantMemberRefInfo(ConstantPool constantPool) {
         this.constantPool = constantPool;
@@ -41,11 +41,11 @@ public class ConstantMemberRefInfo implements ConstantInfo {
 
     @Override
     public String toString() {
-        return "ConstantMemberRefInfo{" +
+        return "ConstantMemberRefInfo   {" +
                 "tag=" + tag() +
                 ", classIdx=" + classIdx +
-                ", nameAndTypeIdx=" + nameAndTypeIdx +
                 ", className=" + this.className() +
+                ", nameAndTypeIdx=" + nameAndTypeIdx +
                 ", nameAndDescriptor=" + this.nameAndDescriptor() +
                 '}';
     }

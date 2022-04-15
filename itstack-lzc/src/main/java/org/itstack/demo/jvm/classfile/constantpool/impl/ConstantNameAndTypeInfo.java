@@ -25,7 +25,7 @@ public class ConstantNameAndTypeInfo implements ConstantInfo {
 
     @Override
     public String toString() {
-        return "ConstantNameAndTypeInfo{" +
+        return "ConstantNameAndTypeInfo  {" +
                 "tag=" + tag() +
                 ", nameIdx=" + nameIdx +
                 ", descIdx=" + descIdx +

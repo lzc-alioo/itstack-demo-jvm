@@ -29,7 +29,7 @@ public class ConstantUtf8Info implements ConstantInfo {
 
     @Override
     public String toString() {
-        return "ConstantUtf8Info{" +
+        return "ConstantUtf8Info         {" +
                 "tag=" + tag() +
                 ", str=" + str +
                 '}';

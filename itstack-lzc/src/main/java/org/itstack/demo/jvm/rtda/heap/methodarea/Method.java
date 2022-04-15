@@ -1,7 +1,9 @@
 package org.itstack.demo.jvm.rtda.heap.methodarea;
 
 import org.itstack.demo.jvm.classfile.MemberInfo;
+import org.itstack.demo.jvm.classfile.attributes.AttributeInfo;
 import org.itstack.demo.jvm.classfile.attributes.impl.CodeAttribute;
+import org.itstack.demo.jvm.classfile.attributes.impl.DeprecatedAttribute;
 import org.itstack.demo.jvm.rtda.heap.constantpool.AccessFlags;
 
 import java.util.List;
@@ -12,17 +14,54 @@ public class Method extends ClassMember {
     public int maxLocals;
     public byte[] code;
     private int argSlotCount;
+    public boolean deprecated;
 
     Method[] newMethods(Class clazz, MemberInfo[] cfMethods) {
         Method[] methods = new Method[cfMethods.length];
         for (int i = 0; i < cfMethods.length; i++) {
-            methods[i] = new Method();
-            methods[i].clazz = clazz;
-            methods[i].copyMemberInfo(cfMethods[i]);
-            methods[i].copyAttributes(cfMethods[i]);
-            methods[i].calcArgSlotCount();
+            methods[i] = newMethod(clazz, cfMethods[i]);
         }
         return methods;
+    }
+
+    private Method newMethod(Class clazz, MemberInfo cfMethod) {
+        Method method = new Method();
+        method.clazz = clazz;
+        method.copyMemberInfo(cfMethod);
+        method.copyAttributes(cfMethod);
+        MethodDescriptor md = MethodDescriptorParser.parseMethodDescriptorParser(method.descriptor);
+        method.calcArgSlotCount(md.parameterTypes);
+        if (method.isNative()) {
+            method.injectCodeAttribute(md.returnType);
+        }
+        return method;
+    }
+
+    private void injectCodeAttribute(String returnType) {
+        this.maxStack = 4; //todo
+        this.maxLocals = this.argSlotCount;
+
+        switch (returnType.getBytes()[0]) {
+            case 'V':
+                this.code = new byte[]{(byte) 0xfe, (byte) 0xb1};
+                break;
+            case 'L':
+            case '[':
+                this.code = new byte[]{(byte) 0xfe, (byte) 0xb0};
+                break;
+            case 'D':
+                this.code = new byte[]{(byte) 0xfe, (byte) 0xaf};
+                break;
+            case 'F':
+                this.code = new byte[]{(byte) 0xfe, (byte) 0xae};
+                break;
+            case 'J':
+                this.code = new byte[]{(byte) 0xfe, (byte) 0xad};
+                break;
+            default:
+                this.code = new byte[]{(byte) 0xfe, (byte) 0xac};
+                break;
+        }
     }
 
     private void copyAttributes(MemberInfo cfMethod) {
@@ -32,11 +71,16 @@ public class Method extends ClassMember {
             this.maxLocals = codeAttr.maxLocals();
             this.code = codeAttr.data();
         }
+
+        //lzc add 标记下过时的方法
+        for(AttributeInfo attributeInfo:cfMethod.getAttributes()){
+            if(attributeInfo instanceof DeprecatedAttribute){
+                this.deprecated=true;
+            }
+        }
     }
 
-    private void calcArgSlotCount() {
-        MethodDescriptor parsedDescriptor = MethodDescriptorParser.parseMethodDescriptorParser(this.descriptor);
-        List<String> parameterTypes = parsedDescriptor.parameterTypes;
+    private void calcArgSlotCount(List<String> parameterTypes) {
         for (String paramType : parameterTypes) {
             this.argSlotCount++;
             if ("J".equals(paramType) || "D".equals(paramType)) {

@@ -2,10 +2,11 @@ package org.itstack.demo.jvm.rtda.heap;
 
 import org.itstack.demo.jvm.classfile.ClassFile;
 import org.itstack.demo.jvm.classpath.Classpath;
+import org.itstack.demo.jvm.rtda.heap.constantpool.AccessFlags;
 import org.itstack.demo.jvm.rtda.heap.constantpool.RunTimeConstantPool;
 import org.itstack.demo.jvm.rtda.heap.methodarea.Class;
-import org.itstack.demo.jvm.rtda.heap.methodarea.Field;
-import org.itstack.demo.jvm.rtda.heap.methodarea.Slots;
+import org.itstack.demo.jvm.rtda.heap.methodarea.Object;
+import org.itstack.demo.jvm.rtda.heap.methodarea.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,27 +26,84 @@ public class ClassLoader {
     public ClassLoader(Classpath classpath) {
         this.classpath = classpath;
         this.classMap = new HashMap<>();
+
+        this.loadBasicClasses();
+        this.loadPrimitiveClasses();
+    }
+
+    private void loadBasicClasses() {
+        Class jlClassClass = this.loadClass("java/lang/Class");
+        for (Map.Entry<String, Class> entry : this.classMap.entrySet()) {
+            Class clazz = entry.getValue();
+            if (clazz.jClass == null) {
+                clazz.jClass = jlClassClass.newObject();
+                clazz.jClass.extra = clazz;
+            }
+        }
+    }
+
+    private void loadPrimitiveClasses() {
+        for (Map.Entry<String, String> entry : ClassNameHelper.primitiveTypes.entrySet()) {
+            loadPrimitiveClass(entry.getKey());
+        }
+    }
+
+    private void loadPrimitiveClass(String className) {
+        Class clazz = new Class(AccessFlags.ACC_PUBLIC,
+                className,
+                this,
+                true);
+        clazz.jClass = this.classMap.get("java/lang/Class").newObject();
+        clazz.jClass.extra = clazz;
+        this.classMap.put(className, clazz);
     }
 
     public Class loadClass(String className) {
         Class clazz = classMap.get(className);
         if (null != clazz) return clazz;
-        try {
-            return loadNonArrayClass(className);
-        } catch (Exception e) {
-            e.printStackTrace();
+
+        //'['数组标识
+        if (className.getBytes()[0] == '[') {
+            clazz = loadArrayClass(className);
+        } else {
+            clazz = loadNonArrayClass(className);
         }
-        return null;
+
+        Class jlClazz = this.classMap.get("java/lang/Class");
+        if (null != jlClazz && null != clazz) {
+            clazz.jClass = jlClazz.newObject();
+            clazz.jClass.extra = clazz;
+        }
+
+        return clazz;
     }
 
-    private Class loadNonArrayClass(String className) throws Exception {
-        byte[] data = this.classpath.readClass(className);
-        if (null == data) {
-            throw new ClassNotFoundException(className);
-        }
-        Class clazz = defineClass(data);
-        link(clazz);
+    private Class loadArrayClass(String className) {
+        Class clazz = new Class(AccessFlags.ACC_PUBLIC,
+                className,
+                this,
+                true,
+                this.loadClass("java/lang/Object"),
+                new Class[]{
+                        this.loadClass("java/lang/Cloneable"),
+                        this.loadClass("java/io/Serializable")});
+        this.classMap.put(className, clazz);
         return clazz;
+    }
+
+    private Class loadNonArrayClass(String className) {
+        try {
+            byte[] data = this.classpath.readClass(className);
+            if (null == data) {
+                throw new ClassNotFoundException(className);
+            }
+            Class clazz = defineClass(data);
+            link(clazz);
+            return clazz;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     private void link(Class clazz) {
@@ -81,16 +139,23 @@ public class ClassLoader {
                 case "C":
                 case "S":
                 case "I":
-                    Object val = constantPool.getConstants(cpIdx);
+                    java.lang.Object val = constantPool.getConstants(cpIdx);
                     staticVars.setInt(slotId, (Integer) val);
+                    break;
                 case "J":
                     staticVars.setLong(slotId, (Long) constantPool.getConstants(cpIdx));
+                    break;
                 case "F":
                     staticVars.setFloat(slotId, (Float) constantPool.getConstants(cpIdx));
+                    break;
                 case "D":
                     staticVars.setDouble(slotId, (Double) constantPool.getConstants(cpIdx));
+                    break;
                 case "Ljava/lang/String;":
-                    System.out.println("todo");
+                    String goStr = (String) constantPool.getConstants(cpIdx);
+                    Object jStr = StringPool.jString(clazz.loader(), goStr);
+                    staticVars.setRef(slotId, jStr);
+                    break;
             }
         }
 

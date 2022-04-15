@@ -28,7 +28,7 @@ public class ConstantIntegerInfo implements ConstantInfo {
 
     @Override
     public String toString() {
-        return "ConstantIntegerInfo{" +
+        return "ConstantIntegerInfo      {" +
                 "tag=" + tag() +
                 ", val=" + val +
                 '}';

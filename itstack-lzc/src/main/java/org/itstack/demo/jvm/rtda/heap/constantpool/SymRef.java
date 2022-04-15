@@ -8,6 +8,9 @@ public class SymRef {
     public String className;
     public Class clazz;
 
+    public int nameIdx;
+
+
     public Class resolvedClass() {
         if (null != this.clazz) return this.clazz;
         Class d = this.runTimeConstantPool.getClazz();

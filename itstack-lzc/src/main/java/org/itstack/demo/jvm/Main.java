@@ -1,16 +1,23 @@
 package org.itstack.demo.jvm;
 
+import org.apache.commons.lang3.StringUtils;
 import org.itstack.demo.jvm.classfile.ClassFile;
 import org.itstack.demo.jvm.classfile.MemberInfo;
 import org.itstack.demo.jvm.classfile.attributes.AttributeInfo;
+import org.itstack.demo.jvm.classfile.attributes.impl.CodeAttribute;
+import org.itstack.demo.jvm.classfile.attributes.impl.LineNumberTableAttribute;
+import org.itstack.demo.jvm.classfile.attributes.impl.LocalVariableTableAttribute;
 import org.itstack.demo.jvm.classfile.constantpool.ConstantInfo;
 import org.itstack.demo.jvm.classpath.Classpath;
+import org.itstack.demo.jvm.instructions.Factory;
+import org.itstack.demo.jvm.instructions.base.Instruction;
 import org.itstack.demo.jvm.lzc.Jad;
-import org.itstack.demo.jvm.lzc.JdkUtil;
+import org.itstack.demo.jvm.lzc.JdkVersionUtil;
 import org.itstack.demo.jvm.rtda.heap.ClassLoader;
 import org.itstack.demo.jvm.rtda.heap.methodarea.Class;
 
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.stream.IntStream;
 
 /**
@@ -44,7 +51,7 @@ public class Main {
         printClassInfo(classFile);
 
         ClassLoader classLoader = new ClassLoader(classpath);
-        Class clazz=classLoader.loadClass(className);
+        Class clazz = classLoader.loadClass(className);
         Jad.deCompile(clazz);
 
     }
@@ -60,49 +67,144 @@ public class Main {
     }
 
     private static void printClassInfo(ClassFile cf) {
-        System.out.println("version: " + cf.majorVersion() + "." + cf.minorVersion() + ",readable version:" + JdkUtil.getVersion(cf.majorVersion()));
+        System.out.println("major_version.minor_version: " + cf.majorVersion() + "." + cf.minorVersion() + ",readable version:" + JdkVersionUtil.getVersion(cf.majorVersion()));
 
-        System.out.println("constants size：" + cf.constantPool().getSiz());
-        printSplit();
+        System.out.println("constant_pool_count size：" + cf.constantPool().getSiz());
+        printSplit(20);
         ConstantInfo[] constantInfos = cf.constantPool().getConstantInfos();
         for (int i = 0, constantInfosLength = constantInfos.length; i < constantInfosLength; i++) {
             ConstantInfo constantInfo = constantInfos[i];
-            System.out.println("constants[" + i + "]    :" + constantInfo);
+
+            StringBuilder buf = new StringBuilder();
+            buf.append("[").append(StringUtils.leftPad("" + i, 2, ' ')).append("]");
+            buf.append("    ");
+            buf.append(constantInfo);
+            System.out.println(buf.toString());
         }
-        printSplit();
+        printSplit(20);
 
         System.out.format("access flags：0x%x\n", cf.accessFlags());
         System.out.println("this class：" + cf.className());
         System.out.println("super class：" + cf.superClassName());
         System.out.println("interfaces：" + Arrays.toString(cf.interfaceNames()));
         System.out.println("fields count：" + cf.fields().length);
-        printSplit();
-        for (MemberInfo memberInfo : cf.fields()) {
-            System.out.format("fieldName:%s \t\t, fieldType: %s, memberInfo: %s\n", memberInfo.name(), memberInfo.descriptor(), memberInfo);
+        printSplit(20);
+        MemberInfo[] fields = cf.fields();
+        for (int i = 0, fieldsLength = fields.length; i < fieldsLength; i++) {
+            MemberInfo memberInfo = fields[i];
+
+            StringBuilder buf = new StringBuilder();
+            buf.append("[").append(StringUtils.rightPad("" + i, 1, '0')).append("]");
+            buf.append("    ");
+            buf.append(StringUtils.rightPad("fieldName:" + memberInfo.name(), 16));
+            buf.append(StringUtils.rightPad(",fieldType:" + memberInfo.descriptor(), 30));
+//            buf.append(JSON.toJSONString(memberInfo));
+            buf.append(memberInfo);
+            System.out.println(buf.toString());
+
+
         }
-        printSplit();
+        printSplit(20);
 
         System.out.println("methods count: " + cf.methods().length);
-        printSplit();
-        for (MemberInfo memberInfo : cf.methods()) {
-            System.out.format("methodName:%s \t\t, methodType:%s, memberInfo: %s\n", memberInfo.name(), memberInfo.descriptor(), memberInfo);
-        }
-        printSplit();
+        printSplit(20);
+        MemberInfo[] methods = cf.methods();
+        for (int i = 0, methodsLength = methods.length; i < methodsLength; i++) {
+            MemberInfo memberInfo = methods[i];
 
-        System.out.println("attributes count: " + cf.attributes().length);
-        printSplit();
-        for (AttributeInfo memberInfo : cf.attributes()) {
+            StringBuilder buf = new StringBuilder();
+            buf.append("[").append(StringUtils.rightPad("" + i, 1, '0')).append("]");
+            buf.append("    ");
+            buf.append(StringUtils.rightPad("methodName:" + memberInfo.name(), 20));
+            buf.append(StringUtils.rightPad(",methodType:" + memberInfo.descriptor(), 40));
+            buf.append(memberInfo);
+            System.out.println(buf.toString());
+
+        }
+        printSplit(20);
+        for (int i = 0, methodsLength = methods.length; i < methodsLength; i++) {
+            MemberInfo memberInfo = methods[i];
+
+            StringBuilder buf = new StringBuilder();
+            buf.append("[").append(StringUtils.rightPad("" + i, 1, '0')).append("]");
+            buf.append("    ");
+            buf.append(StringUtils.rightPad("methodName:" + memberInfo.name(), 20));
+            buf.append(StringUtils.rightPad(",methodType:" + memberInfo.descriptor(), 40));
+            buf.append("\n");
+
+            StringBuilder codesub = new StringBuilder("Code\n");
+            CodeAttribute codeAttribute = memberInfo.codeAttribute();
+            codesub.append("  maxStack:").append(codeAttribute.getMaxStack()).append("    ").append("maxLocals:").append(codeAttribute.getMaxLocals()).append("    \n");
+            byte[] data = codeAttribute.getData();
+            for (int j = 0; j < data.length; j++) {
+                Instruction instruction = Factory.newInstruction(data[j]);
+                String instructionClass = Optional.ofNullable(instruction).map(obj -> obj.toString()).map(obj -> obj.substring(obj.lastIndexOf(".") + 1).split("@")[0]).orElse(data[j] + "-UNKOWN ");
+                codesub.append("    ").append(instructionClass).append("\n");
+            }
+            buf.append(codesub.toString());
+
+
+            {
+                StringBuilder linesub = new StringBuilder("  LineNumber\n");
+                LineNumberTableAttribute lineNumberTableAttribute = codeAttribute.lineNumberTableAttribute();
+                LineNumberTableAttribute.LineNumberTableEntry[] lineNumberTable = Optional.ofNullable(lineNumberTableAttribute)
+                        .map(LineNumberTableAttribute::getLineNumberTable)
+                        .orElse(new LineNumberTableAttribute.LineNumberTableEntry[0]);
+
+                linesub.append("    ").append(StringUtils.rightPad("startPC",20));
+                linesub.append(StringUtils.rightPad("lineNumber",10)).append("\n");
+                for (int j = 0; j < lineNumberTable.length; j++) {
+                    linesub.append("    ");
+                    linesub.append(StringUtils.rightPad(lineNumberTable[j].startPC+"",20));
+                    linesub.append(StringUtils.rightPad(lineNumberTable[j].lineNumber+"",20));
+                    linesub.append("\n");
+                }
+                buf.append(linesub.toString());
+            }
+
+            {
+                StringBuilder localVariablesub = new StringBuilder("  LocalVariable\n");
+                LocalVariableTableAttribute localVariableTableAttribute = codeAttribute.localVariableTableAttribute();
+                LocalVariableTableAttribute.LocalVariableTableEntry[] localVariable = Optional.ofNullable(localVariableTableAttribute)
+                        .map(LocalVariableTableAttribute::getLocalVariableTable)
+                        .orElse(new LocalVariableTableAttribute.LocalVariableTableEntry[0]);
+                localVariablesub.append("    ");
+                localVariablesub.append(StringUtils.rightPad("startPC",10));
+                localVariablesub.append(StringUtils.rightPad("length",10));
+                localVariablesub.append(StringUtils.rightPad("name",10));
+                localVariablesub.append(StringUtils.rightPad("descriptor",20));
+                localVariablesub.append("\n");
+
+                for (int j = 0; j < localVariable.length; j++) {
+                    localVariablesub.append("     ");
+                    localVariablesub.append(StringUtils.rightPad(localVariable[j].length+"", 10));
+                    localVariablesub.append(StringUtils.rightPad(localVariable[j].startPC+"", 10));
+                    localVariablesub.append(StringUtils.rightPad(cf.constantPool().getUTF8(localVariable[j].nameIdx), 10));
+                    localVariablesub.append(StringUtils.rightPad(cf.constantPool().getUTF8(localVariable[j].descriptorIdx), 40));
+                    localVariablesub.append("\n");
+                }
+                buf.append(localVariablesub.toString());
+            }
+
+
+            System.out.println(buf.toString());
+        }
+        printSplit(20);
+
+        System.out.println("attributes count: " + cf.getAttributes().length);
+        printSplit(20);
+        for (AttributeInfo memberInfo : cf.getAttributes()) {
             System.out.format("attribute:%s  \n", memberInfo);
         }
-        printSplit();
+        printSplit(20);
 
 
     }
 
 
-    private static void printSplit() {
-        IntStream.range(0, 10).boxed().forEach(i -> {
-            if (i < 9) {
+    private static void printSplit(int n) {
+        IntStream.range(0, n).boxed().forEach(i -> {
+            if (i < n - 1) {
                 System.out.print("-");
             } else {
                 System.out.println();

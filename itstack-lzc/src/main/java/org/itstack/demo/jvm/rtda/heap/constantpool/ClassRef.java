@@ -8,6 +8,8 @@ public class ClassRef extends SymRef {
         ClassRef ref = new ClassRef();
         ref.runTimeConstantPool = runTimeConstantPool;
         ref.className = classInfo.name();
+
+        ref.nameIdx = classInfo.nameIdx;
         return ref;
     }
 

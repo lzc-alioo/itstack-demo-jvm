@@ -68,6 +68,10 @@ public class LocalVars {
         this.slots[idx] = slot;
     }
 
+    public Object getThis(){
+        return this.getRef(0);
+    }
+
     public Slot[] getSlots() {
         return slots;
     }

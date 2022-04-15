@@ -1,6 +1,8 @@
 package org.itstack.demo.jvm.rtda.heap.methodarea;
 
 import org.itstack.demo.jvm.classfile.ClassFile;
+import org.itstack.demo.jvm.classfile.attributes.AttributeInfo;
+import org.itstack.demo.jvm.classfile.attributes.impl.DeprecatedAttribute;
 import org.itstack.demo.jvm.rtda.heap.ClassLoader;
 import org.itstack.demo.jvm.rtda.heap.constantpool.AccessFlags;
 import org.itstack.demo.jvm.rtda.heap.constantpool.RunTimeConstantPool;
@@ -21,6 +23,8 @@ public class Class {
     public int staticSlotCount;
     public Slots staticVars;
     public boolean initStarted;
+    public Object jClass;
+    public boolean deprecated;
 
     public Class(ClassFile classFile) {
         this.accessFlags = classFile.accessFlags();
@@ -30,6 +34,30 @@ public class Class {
         this.runTimeConstantPool = new RunTimeConstantPool(this, classFile.constantPool());
         this.fields = new Field().newFields(this, classFile.fields());
         this.methods = new Method().newMethods(this, classFile.methods());
+
+        //lzc add 标记下过时的方法
+        for(AttributeInfo attributeInfo:classFile.getAttributes()){
+            if(attributeInfo instanceof DeprecatedAttribute){
+                this.deprecated=true;
+            }
+        }
+    }
+
+    //load Array Class
+    public Class(int accessFlags, String name, ClassLoader loader, boolean initStarted, Class superClass, Class[] interfaces) {
+        this.accessFlags = accessFlags;
+        this.name = name;
+        this.loader = loader;
+        this.initStarted = initStarted;
+        this.superClass = superClass;
+        this.interfaces = interfaces;
+    }
+
+    public Class(int accessFlags, String name, ClassLoader loader, boolean initStarted) {
+        this.accessFlags = accessFlags;
+        this.name = name;
+        this.loader = loader;
+        this.initStarted = initStarted;
     }
 
     public boolean isPublic() {
@@ -84,6 +112,10 @@ public class Class {
         return methods;
     }
 
+    public ClassLoader loader() {
+        return this.loader;
+    }
+
     public Class superClass() {
         return superClass;
     }
@@ -92,11 +124,15 @@ public class Class {
         return this.staticVars;
     }
 
-    public boolean initStarted(){
+    public boolean initStarted() {
         return this.initStarted;
     }
 
-    public void startInit(){
+    public Object jClass() {
+        return this.jClass;
+    }
+
+    public void startInit() {
         this.initStarted = true;
     }
 
@@ -106,29 +142,28 @@ public class Class {
 
     public String getPackageName() {
         int i = this.name.lastIndexOf("/");
-        if (i >= 0) return this.name;
+        if (i >= 0) return this.name.substring(0, i);
         return "";
     }
 
     public Method getMainMethod() {
-        return this.getStaticMethod("main", "([Ljava/lang/String;)V");
+        return this.getStaticMethod("main", "([Ljava/lang/String;)V", true);
     }
 
-    private Method getStaticMethod(String name, String descriptor) {
-        for (Method method : this.methods) {
-            if (method.name.equals(name) && method.descriptor.equals(descriptor)) {
-                return method;
+    public Method getClinitMethod() {
+        return this.getStaticMethod("<clinit>", "()V", true);
+    }
+
+    private Method getStaticMethod(String name, String descriptor, boolean isStatic) {
+        for (Class c = this; c != null; c = c.superClass) {
+            if (null == c.methods) continue;
+            for (Method method : c.methods) {
+                if (method.isStatic() == isStatic && method.name.equals(name) && method.descriptor.equals(descriptor)) {
+                    return method;
+                }
             }
         }
-        return null;
-    }
-
-    public Method getClinitMethod(){
-        return this.getStaticMethod("<clinit>","()V");
-    }
-
-    public Object newObject() {
-        return new Object(this);
+        throw new RuntimeException("method not find: " + name + " " + descriptor);
     }
 
     public boolean isAssignableFrom(Class other) {
@@ -169,6 +204,97 @@ public class Class {
             }
         }
         return false;
+    }
+
+    public Field getField(String name, String descriptor, boolean isStatic) {
+        for (Class c = this; c != null; c = c.superClass) {
+            for (Field field : c.fields) {
+                if (field.isStatic() == isStatic &&
+                        field.name.equals(name) &&
+                        field.descriptor.equals(descriptor)) {
+                    return field;
+                }
+            }
+        }
+        return null;
+    }
+
+    public boolean isJlObject() {
+        return this.name.equals("java/lang/Object");
+    }
+
+    public boolean isJlCloneable() {
+        return this.name.equals("java/lang/Cloneable");
+    }
+
+    public boolean isJioSerializable() {
+        return this.name.endsWith("java/io/Serializable");
+    }
+
+    public Object newObject() {
+        return new Object(this);
+    }
+
+    public Class arrayClass() {
+        String arrayClassName = ClassNameHelper.getArrayClassName(this.name);
+        return this.loader.loadClass(arrayClassName);
+    }
+
+    public String javaName() {
+        return this.name.substring(0, 1) + this.name.substring(1).replace("/", ".");
+    }
+
+    public boolean IsPrimitive() {
+        return null != ClassNameHelper.primitiveTypes.get(this.name);
+    }
+
+    public Method getInstanceMethod(String name, String descriptor) {
+        return this.getStaticMethod(name, descriptor, false);
+    }
+
+    public Object getRefVar(String fieldName, String fieldDescriptor) {
+        Field field = this.getField(fieldName, fieldDescriptor, true);
+        return this.staticVars.getRef(field.slotId);
+    }
+
+    public void setRefVar(String fieldName, String fieldDescriptor, Object ref) {
+        Field field = this.getField(fieldName, fieldDescriptor, true);
+        this.staticVars.setRef(field.slotId, ref);
+    }
+
+    public boolean isArray() {
+        return this.name.getBytes()[0] == '[';
+    }
+
+    public Class componentClass() {
+        String componentClassName = ClassNameHelper.getComponentClassName(this.name);
+        return this.loader.loadClass(componentClassName);
+    }
+
+    public Object newArray(int count) {
+        if (!this.isArray()) {
+            throw new RuntimeException("Not array class " + this.name);
+        }
+        switch (this.name()) {
+            case "[Z":
+                return new Object(this, new byte[count]);
+            case "[B":
+                return new Object(this, new byte[count]);
+            case "[C":
+                return new Object(this, new char[count]);
+            case "[S":
+                return new Object(this, new short[count]);
+            case "[I":
+                return new Object(this, new int[count]);
+            case "[J":
+                return new Object(this, new long[count]);
+            case "[F":
+                return new Object(this, new float[count]);
+            case "[D":
+                return new Object(this, new double[count]);
+            default:
+                return new Object(this, new Object[count]);
+        }
     }
 
 }

@@ -14,4 +14,8 @@ public class DeprecatedAttribute extends MarkerAttribute {
 
     }
 
+    @Override
+    public String toString() {
+        return "DeprecatedAttribute{}";
+    }
 }

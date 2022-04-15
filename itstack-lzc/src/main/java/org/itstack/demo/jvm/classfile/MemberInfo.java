@@ -3,6 +3,7 @@ package org.itstack.demo.jvm.classfile;
 import org.itstack.demo.jvm.classfile.attributes.AttributeInfo;
 import org.itstack.demo.jvm.classfile.attributes.impl.CodeAttribute;
 import org.itstack.demo.jvm.classfile.attributes.impl.ConstantValueAttribute;
+import org.itstack.demo.jvm.classfile.attributes.impl.LineNumberTableAttribute;
 import org.itstack.demo.jvm.classfile.constantpool.ConstantPool;
 
 import java.util.Arrays;
@@ -55,11 +56,45 @@ public class MemberInfo {
         return null;
     }
 
-    public ConstantValueAttribute ConstantValueAttribute() {
+
+    public ConstantValueAttribute constantValueAttribute() {
         for (AttributeInfo attrInfo : attributes) {
             if (attrInfo instanceof ConstantValueAttribute) return (ConstantValueAttribute) attrInfo;
         }
         return null;
+    }
+
+
+    public int getAccessFlags() {
+        return accessFlags;
+    }
+
+    public void setAccessFlags(int accessFlags) {
+        this.accessFlags = accessFlags;
+    }
+
+    public int getNameIdx() {
+        return nameIdx;
+    }
+
+    public void setNameIdx(int nameIdx) {
+        this.nameIdx = nameIdx;
+    }
+
+    public int getDescriptorIdx() {
+        return descriptorIdx;
+    }
+
+    public void setDescriptorIdx(int descriptorIdx) {
+        this.descriptorIdx = descriptorIdx;
+    }
+
+    public AttributeInfo[] getAttributes() {
+        return attributes;
+    }
+
+    public void setAttributes(AttributeInfo[] attributes) {
+        this.attributes = attributes;
     }
 
     @Override
@@ -73,4 +108,6 @@ public class MemberInfo {
                 ", descriptor=" + descriptor()+
                 '}';
     }
+
+
 }

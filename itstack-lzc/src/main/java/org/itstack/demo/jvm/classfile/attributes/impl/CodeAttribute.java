@@ -49,9 +49,9 @@ public class CodeAttribute implements AttributeInfo {
         return this.exceptionTable;
     }
 
-    public AttributeInfo[] attributes() {
-        return this.attributes;
-    }
+//    public AttributeInfo[] attributes() {
+//        return this.attributes;
+//    }
 
     static class ExceptionTableEntry {
 
@@ -103,6 +103,40 @@ public class CodeAttribute implements AttributeInfo {
         }
     }
 
+    public int getMaxStack() {
+        return maxStack;
+    }
+
+    public int getMaxLocals() {
+        return maxLocals;
+    }
+
+    public byte[] getData() {
+        return data;
+    }
+
+    public ExceptionTableEntry[] getExceptionTable() {
+        return exceptionTable;
+    }
+
+    public AttributeInfo[] getAttributes() {
+        return attributes;
+    }
+
+
+    public LineNumberTableAttribute lineNumberTableAttribute() {
+        for (AttributeInfo attrInfo : attributes) {
+            if (attrInfo instanceof LineNumberTableAttribute) return (LineNumberTableAttribute) attrInfo;
+        }
+        return null;
+    }
+
+    public LocalVariableTableAttribute localVariableTableAttribute() {
+        for (AttributeInfo attrInfo : attributes) {
+            if (attrInfo instanceof LocalVariableTableAttribute) return (LocalVariableTableAttribute) attrInfo;
+        }
+        return null;
+    }
     @Override
     public String toString() {
         return "CodeAttribute{" +

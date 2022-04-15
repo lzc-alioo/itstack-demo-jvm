@@ -11,7 +11,7 @@ import org.itstack.demo.jvm.rtda.heap.methodarea.Class;
 public class RunTimeConstantPool {
 
     private Class clazz;
-    private Object[] constants;
+    public Object[] constants;
 
     public RunTimeConstantPool(Class clazz, ConstantPool constantPool) {
         int cpCount = constantPool.getConstantInfos().length;
@@ -43,7 +43,11 @@ public class RunTimeConstantPool {
                     break;
                 case ConstantInfo.CONSTANT_TAG_STRING:
                     ConstantStringInfo stringInfo = (ConstantStringInfo) constantInfo;
-                    this.constants[i] = stringInfo.string();
+                    this.constants[i] = StringRef.newStringRef(this,stringInfo) ;
+                    break;
+                case ConstantInfo.CONSTANT_TAG_UTF8:
+                    ConstantUtf8Info utf8Info = (ConstantUtf8Info) constantInfo;
+                    this.constants[i] = utf8Info.str();
                     break;
                 case ConstantInfo.CONSTANT_TAG_CLASS:
                     ConstantClassInfo classInfo = (ConstantClassInfo) constantInfo;

@@ -33,7 +33,7 @@ public class ConstantClassInfo implements ConstantInfo {
 
     @Override
     public String toString() {
-        return "ConstantClassInfo{" +
+        return "ConstantClassInfo        {" +
                 "tag=" + tag() +
                 ", nameIdx=" + nameIdx +
                 ", name=" + this.name() +

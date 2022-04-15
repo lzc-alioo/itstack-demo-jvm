@@ -11,7 +11,7 @@ import org.itstack.demo.jvm.classfile.constantpool.ConstantPool;
 public class ConstantStringInfo implements ConstantInfo {
 
     private ConstantPool constantPool;
-    private int strIdx;
+    public int strIdx;
 
     public ConstantStringInfo(ConstantPool constantPool) {
         this.constantPool = constantPool;
@@ -33,7 +33,7 @@ public class ConstantStringInfo implements ConstantInfo {
 
     @Override
     public String toString() {
-        return "ConstantStringInfo{" +
+        return "ConstantStringInfo       {" +
                 "strIdx=" + strIdx +
                 ", string=" + string() +
                 '}';

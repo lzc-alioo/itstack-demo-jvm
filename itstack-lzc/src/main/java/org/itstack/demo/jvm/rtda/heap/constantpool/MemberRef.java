@@ -9,11 +9,17 @@ public class MemberRef extends SymRef {
     public String name;
     public String descriptor;
 
+    public int classIdx;
+    public int nameAndTypeIdx;
+
     public void copyMemberRefInfo(ConstantMemberRefInfo refInfo){
         this.className = refInfo.className();
         Map<String, String> map = refInfo.nameAndDescriptor();
         this.name = map.get("name");
         this.descriptor = map.get("_type");
+
+       this.classIdx= refInfo.classIdx;
+       this.nameAndTypeIdx= refInfo.nameAndTypeIdx;
     }
 
     public String name(){
