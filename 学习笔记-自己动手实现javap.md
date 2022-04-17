@@ -1,5 +1,12 @@
 
+# 概述
 纸上得来终觉浅，绝知此事要躬行，今天就动手实现一个jdk自带的工具javap
+
+- 阅读本文可以带你完整的自己实现javap的全部功能
+- 本文只提到了核心代码，完整代码git地址请访问：https://github.com/lzc-alioo/itstack-demo-jvm
+-  项目访问入口类是com.lzc.wuxin.Jad1，com.lzc.wuxin.Jad2，将分别代表javap，javap -v的实现逻辑，如果你在运行过程中有任何问题欢迎留言，看到后一定为你解答，同时如果你发现代码的缺陷，也欢迎提交issue或者直接提交pr。
+- 本文的创作是建立在github中一个已经开源的项目基础上进行的，源项目地址为：itstack-demo-jvm （https://github.com/fuzhengwei/itstack-demo-jvm）
+
 
 # 准备工作
 ## 用来测试的java文件 HelloWorld.java
@@ -23,9 +30,9 @@ public class HelloWorld {
 
 ```
 
-## javap VS jad1
-javap效果
-```
+# javap VS jad1
+## javap效果
+```shell
 javap com.lzc.wuxin.demo.HelloWorld
 Compiled from "HelloWorld.java"
 public class com.lzc.wuxin.demo.HelloWorld {
@@ -35,8 +42,8 @@ public class com.lzc.wuxin.demo.HelloWorld {
 }
 ```
 
-jad1效果
-```
+## jad1效果
+```shell
 Compiled from "HelloWorld.java" (反编译工具作者：Lzc)
 public class com.lzc.wuxin.demo.HelloWorld {
     private static final byte abc = -14;
@@ -48,8 +55,8 @@ public class com.lzc.wuxin.demo.HelloWorld {
     static {};
 }
 ```
-相应的源码
-```
+## jad1相应的源码
+```java
 public static void deCompile(Cmd cmd) {
     Classpath classpath = new Classpath(cmd.jre, cmd.classpath);
     ClassLoader classLoader = new ClassLoader(classpath);
@@ -80,9 +87,9 @@ public static void deCompile(Cmd cmd) {
 }
 ```
 
-## javap -v VS jad2
-javap -v效果
-```
+# javap -v VS jad2
+## javap -v效果
+```shell
 javap -v com.lzc.wuxin.demo.HelloWorld
 Classfile /Users/mac/work/gitstudy/itstack-demo-jvm/itstack-lzc/target/test-classes/com/lzc/wuxin/demo/HelloWorld.class
   Last modified 2022-4-17; size 711 bytes
@@ -189,8 +196,8 @@ SourceFile: "HelloWorld.java"
 
 ```
 
-jad2效果
-```
+## jad2效果
+```shell
 Classfile       : /Users/mac/work/gitstudy/itstack-demo-jvm/itstack-lzc/target/test-classes/com/lzc/wuxin/demo/HelloWorld.class
   Last modified : 2022-04-17; size 711 bytes
   MD5 checksum  : 17e695fb34c8c10f716ac6e92c8609f1
@@ -306,18 +313,18 @@ Constant pool:
 }
 ```
 
-相应的源码
-```
+## jad2相应的源码
+```java
     public static void deCompile(Cmd cmd) {
         String className = cmd.getMainClass().replace(".", "/");
         String simpleClassName = className.substring(className.lastIndexOf("/") + 1);
 
         ClassInfo classInfo = null;
         try {
-            classInfo = new Classpath(cmd.jre, cmd.classpath).readClass2ClassInfo(className);
+        classInfo = new Classpath(cmd.jre, cmd.classpath).readClass2ClassInfo(className);
         } catch (Exception e) {
-            e.printStackTrace();
-            return;
+        e.printStackTrace();
+        return;
         }
 
         System.out.println(StringUtils.rightPad("Classfile", 16) + ": " + classInfo.classFromPath);
@@ -341,57 +348,57 @@ Constant pool:
         buf.append("Constant pool:\n");
         Object[] constants = clazz.constantPool().constants;
         for (int i = 0; i < constants.length; i++) {
-            //   #1 = Methodref          #5.#34         // java/lang/Object."<init>":()V
-            buf.append(StringUtils.leftPad("#" + i, 4)).append(" = ");
-            buf.append(ConstantPoolUtil.readableConstant(constants[i]));
-            buf.append("\n");
+        //   #1 = Methodref          #5.#34         // java/lang/Object."<init>":()V
+        buf.append(StringUtils.leftPad("#" + i, 4)).append(" = ");
+        buf.append(ConstantPoolUtil.readableConstant(constants[i]));
+        buf.append("\n");
         }
         System.out.print(buf.toString());
         buf.delete(0, buf.length());
 
         buf.append("{\n");
         for (Field memberInfo : clazz.fields) {
-            Object val = ValueUtil.getValue(memberInfo, clazz);
-            buf.append("  ").append(memberInfo.deprecated ? "@Deprecated " : "").append(AccessFlagsUtil.getAccessFlagsStr(memberInfo.accessFlags)).append(FieldDescriptorUtil.getDescriptorStr(memberInfo.descriptor())).append(memberInfo.name()).append(Optional.ofNullable(val).map(tmp -> " = " + tmp).orElse("")).append(";\n");
+        Object val = ValueUtil.getValue(memberInfo, clazz);
+        buf.append("  ").append(memberInfo.deprecated ? "@Deprecated " : "").append(AccessFlagsUtil.getAccessFlagsStr(memberInfo.accessFlags)).append(FieldDescriptorUtil.getDescriptorStr(memberInfo.descriptor())).append(memberInfo.name()).append(Optional.ofNullable(val).map(tmp -> " = " + tmp).orElse("")).append(";\n");
         }
         buf.append("\n");
 
         for (Method method : clazz.methods) {
-            //方法参数类型 方法返回值类型
-            MethodInfo methodInfo = MethodDescriptorUtil.getMethodInfo(method);
-            buf.append("  ").append(AccessFlagsUtil.getAccessFlagsStr(method.accessFlags)).append(methodInfo.getValueType()).append(methodInfo.getMethodName()).append(methodInfo.getParamType()).append(";\n");
-            buf.append("    descriptor:").append(method.descriptor).append("\n");
-            buf.append("    flags: ").append(AccessFlagsUtil.getAccessFlagsStr(clazz.accessFlags)).append("\n");
+        //方法参数类型 方法返回值类型
+        MethodInfo methodInfo = MethodDescriptorUtil.getMethodInfo(method);
+        buf.append("  ").append(AccessFlagsUtil.getAccessFlagsStr(method.accessFlags)).append(methodInfo.getValueType()).append(methodInfo.getMethodName()).append(methodInfo.getParamType()).append(";\n");
+        buf.append("    descriptor:").append(method.descriptor).append("\n");
+        buf.append("    flags: ").append(AccessFlagsUtil.getAccessFlagsStr(clazz.accessFlags)).append("\n");
 
-            buf.append("    Code: ").append("\n");
-            buf.append("      stack=").append(method.maxStack).append(", locals=").append(method.maxLocals).append(", args_size=").append(method.argSlotCount()).append("\n");
-            for (byte opcode : method.code) {
-                Instruction inst = Factory.newInstruction(opcode);
-                buf.append("        ").append(InstructionUtil.readableInstruction(inst).toLowerCase()).append("\n");
-            }
-            buf.append("      LineNumberTable:").append("\n");
-            for (LineNumberTableAttribute.LineNumberTableEntry lineNumber : method.lineNumberTableAttribute.lineNumberTable) {
-                buf.append("        line ").append(lineNumber.lineNumber).append(": ").append(lineNumber.startPC).append("\n");
-            }
-            buf.append("      LocalVariableTable:").append("\n");
-            buf.append("        Start  Length  Slot  Name   Signature").append("\n");
-            if(method.localVariableTableAttribute!=null && method.localVariableTableAttribute.localVariableTable!=null){
-                for (LocalVariableTableAttribute.LocalVariableTableEntry localVar : method.localVariableTableAttribute.localVariableTable) {
-                    buf.append(StringUtils.leftPad(localVar.startPC + "", 13))
-                            .append(StringUtils.leftPad(localVar.length + "", 8))
-                            .append(StringUtils.leftPad(localVar.idx + "", 6))
-                            .append(StringUtils.leftPad(clazz.runTimeConstantPool.getConstants(localVar.nameIdx) + "", 6)).append("   ")
-                            .append(StringUtils.rightPad(clazz.runTimeConstantPool.getConstants(localVar.descriptorIdx)+"" , 14))
-                            .append("\n");
-                }
-            }
+        buf.append("    Code: ").append("\n");
+        buf.append("      stack=").append(method.maxStack).append(", locals=").append(method.maxLocals).append(", args_size=").append(method.argSlotCount()).append("\n");
+        for (byte opcode : method.code) {
+        Instruction inst = Factory.newInstruction(opcode);
+        buf.append("        ").append(InstructionUtil.readableInstruction(inst).toLowerCase()).append("\n");
+        }
+        buf.append("      LineNumberTable:").append("\n");
+        for (LineNumberTableAttribute.LineNumberTableEntry lineNumber : method.lineNumberTableAttribute.lineNumberTable) {
+        buf.append("        line ").append(lineNumber.lineNumber).append(": ").append(lineNumber.startPC).append("\n");
+        }
+        buf.append("      LocalVariableTable:").append("\n");
+        buf.append("        Start  Length  Slot  Name   Signature").append("\n");
+        if(method.localVariableTableAttribute!=null && method.localVariableTableAttribute.localVariableTable!=null){
+        for (LocalVariableTableAttribute.LocalVariableTableEntry localVar : method.localVariableTableAttribute.localVariableTable) {
+        buf.append(StringUtils.leftPad(localVar.startPC + "", 13))
+        .append(StringUtils.leftPad(localVar.length + "", 8))
+        .append(StringUtils.leftPad(localVar.idx + "", 6))
+        .append(StringUtils.leftPad(clazz.runTimeConstantPool.getConstants(localVar.nameIdx) + "", 6)).append("   ")
+        .append(StringUtils.rightPad(clazz.runTimeConstantPool.getConstants(localVar.descriptorIdx)+"" , 14))
+        .append("\n");
+        }
+        }
 
 
         }
         buf.append("}");
 
         System.out.println(buf.toString());
-    }
+        }
 ```
 
 
