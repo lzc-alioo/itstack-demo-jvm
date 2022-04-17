@@ -2,8 +2,8 @@ package org.itstack.demo.jvm.rtda.heap.methodarea;
 
 import org.itstack.demo.jvm.classfile.ClassFile;
 import org.itstack.demo.jvm.classfile.attributes.impl.SourceFileAttribute;
-import org.itstack.demo.jvm.rtda.heap.constantpool.AccessFlags;
 import org.itstack.demo.jvm.rtda.heap.ClassLoader;
+import org.itstack.demo.jvm.rtda.heap.constantpool.AccessFlags;
 import org.itstack.demo.jvm.rtda.heap.constantpool.RunTimeConstantPool;
 
 public class Class {
@@ -42,7 +42,9 @@ public class Class {
 
     private String getSourceFile(ClassFile classFile) {
         SourceFileAttribute sourceFileAttribute = classFile.sourceFileAttribute();
-        if (null == sourceFileAttribute) return "Unknown";
+        if (null == sourceFileAttribute) {
+            return "Unknown";
+        }
         return sourceFileAttribute.fileName();
     }
 
@@ -115,7 +117,7 @@ public class Class {
         return methods;
     }
 
-    public String sourceFile(){
+    public String sourceFile() {
         return this.sourceFile;
     }
 

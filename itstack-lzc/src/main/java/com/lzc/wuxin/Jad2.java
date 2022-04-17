@@ -51,7 +51,7 @@ public class Jad2 {
         ClassLoader classLoader = new ClassLoader(classpath);
         Class clazz = classLoader.loadClass(className);
         StringBuilder buf = new StringBuilder();
-        buf.append(clazz.deprecated ? "@Deprecated " : "").append(AccessFlagsUtil.getAccessFlagsStr(clazz.accessFlags)).append(cmd.getMainClass()).append(" {\n");
+        buf.append(clazz.deprecated ? "@Deprecated " : "").append(AccessFlagsUtil.getAccessFlagsStr(clazz.accessFlags)).append(cmd.getMainClass()).append("\n");
 
         buf.append("  minor version: ").append(classInfo.classFile.minorVersion()).append("\n");
         buf.append("  major version: ").append(classInfo.classFile.majorVersion()).append("\n");
@@ -68,20 +68,28 @@ public class Jad2 {
             buf.append(ConstantPoolUtil.readableConstant(constants[i]));
             buf.append("\n");
         }
-        System.out.println(buf.toString());
+        System.out.print(buf.toString());
         buf.delete(0, buf.length());
 
-
+        buf.append("{\n");
         for (Field memberInfo : clazz.fields) {
             Object val = ValueUtil.getValue(memberInfo, clazz);
-            buf.append("    ").append(memberInfo.deprecated ? "@Deprecated " : "").append(AccessFlagsUtil.getAccessFlagsStr(memberInfo.accessFlags)).append(FieldDescriptorUtil.getDescriptorStr(memberInfo.descriptor())).append(memberInfo.name()).append(Optional.ofNullable(val).map(tmp -> " = " + tmp).orElse("")).append(";\n");
+            buf.append("  ").append(memberInfo.deprecated ? "@Deprecated " : "").append(AccessFlagsUtil.getAccessFlagsStr(memberInfo.accessFlags)).append(FieldDescriptorUtil.getDescriptorStr(memberInfo.descriptor())).append(memberInfo.name()).append(Optional.ofNullable(val).map(tmp -> " = " + tmp).orElse("")).append(";\n");
         }
         buf.append("\n");
 
         for (Method memberInfo : clazz.methods) {
             //方法参数类型 方法返回值类型
             MethodInfo methodInfo = MethodDescriptorUtil.getMethodInfo(memberInfo);
-            buf.append("    ").append(AccessFlagsUtil.getAccessFlagsStr(memberInfo.accessFlags)).append(methodInfo.getValueType()).append(methodInfo.getMethodName()).append(methodInfo.getParamType()).append(";\n");
+            buf.append("  ").append(AccessFlagsUtil.getAccessFlagsStr(memberInfo.accessFlags)).append(methodInfo.getValueType()).append(methodInfo.getMethodName()).append(methodInfo.getParamType()).append(";\n");
+            buf.append("    descriptor:").append(memberInfo.descriptor).append("\n");
+            buf.append("    flags: ").append(AccessFlagsUtil.getAccessFlagsStr(clazz.accessFlags)).append("\n");
+            buf.append("    Code: ").append("\n");
+            buf.append("      stack=").append(memberInfo.maxStack).append(", locals=").append(memberInfo.maxLocals).append(", args_size=").append(memberInfo.argSlotCount()).append("\n");
+
+            for(byte o:memberInfo.code){
+
+            }
 
         }
         buf.append("}");

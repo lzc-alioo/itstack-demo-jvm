@@ -48,7 +48,9 @@ public class MemberInfo {
 
     public CodeAttribute codeAttribute() {
         for (AttributeInfo attrInfo : attributes) {
-            if (attrInfo instanceof CodeAttribute) return (CodeAttribute) attrInfo;
+            if (attrInfo instanceof CodeAttribute){
+                return (CodeAttribute) attrInfo;
+            }
         }
         return null;
     }

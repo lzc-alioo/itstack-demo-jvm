@@ -15,7 +15,9 @@ public class StringPool {
 
     public static Object jString(ClassLoader loader, String goStr) {
         Object internedStr = internedStrs.get(goStr);
-        if (null != internedStr) return internedStr;
+        if (null != internedStr) {
+            return internedStr;
+        }
 
         char[] chars = goStr.toCharArray();
         Object jChars = new Object(loader.loadClass("[C"), chars);
@@ -35,7 +37,9 @@ public class StringPool {
     public static Object internString(Object jStr) {
         String goStr = goString(jStr);
         Object internedStr = internedStrs.get(goStr);
-        if (null != internedStr) return internedStr;
+        if (null != internedStr) {
+            return internedStr;
+        }
 
         internedStrs.put(goStr, jStr);
         return jStr;
