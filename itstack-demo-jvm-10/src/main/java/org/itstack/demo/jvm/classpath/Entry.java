@@ -1,5 +1,6 @@
 package org.itstack.demo.jvm.classpath;
 
+import org.itstack.demo.jvm.classfile.ClassInfo;
 import org.itstack.demo.jvm.classpath.impl.CompositeEntry;
 import org.itstack.demo.jvm.classpath.impl.DirEntry;
 import org.itstack.demo.jvm.classpath.impl.WildcardEntry;
@@ -16,6 +17,8 @@ import java.io.IOException;
 public interface Entry {
 
     byte[] readClass(String className) throws IOException;
+
+    ClassInfo readClass2ClassInfo(String className) throws IOException;
 
     static Entry create(String path) {
 

@@ -1,7 +1,9 @@
 package org.itstack.demo.jvm.classpath.impl;
 
+import org.itstack.demo.jvm.classfile.ClassInfo;
 import org.itstack.demo.jvm.classpath.Entry;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
 
@@ -24,6 +26,16 @@ public class ZipEntry implements Entry {
         try (FileSystem zipFs = FileSystems.newFileSystem(absolutePath, null)) {
             return Files.readAllBytes(zipFs.getPath(className));
         }
+    }
+
+    @Override
+    public ClassInfo readClass2ClassInfo(String className) throws IOException {
+        try (FileSystem zipFs = FileSystems.newFileSystem(absolutePath, null)) {
+            byte[] classData= Files.readAllBytes(zipFs.getPath(className));
+            return new ClassInfo(classData,absolutePath.toFile());
+
+        }
+
     }
 
     @Override

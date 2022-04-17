@@ -1,5 +1,6 @@
 package org.itstack.demo.jvm.classpath.impl;
 
+import org.itstack.demo.jvm.classfile.ClassInfo;
 import org.itstack.demo.jvm.classpath.Entry;
 
 import java.io.File;
@@ -33,6 +34,17 @@ public class CompositeEntry implements Entry {
         }
         throw new IOException("class not found " + className);
     }
+
+    @Override
+    public ClassInfo readClass2ClassInfo(String className) throws IOException {
+        for (Entry entry : entryList) {
+            try {
+                return entry.readClass2ClassInfo(className);
+            } catch (Exception ignored) {
+                //ignored
+            }
+        }
+        throw new IOException("class not found " + className);    }
 
 
     @Override

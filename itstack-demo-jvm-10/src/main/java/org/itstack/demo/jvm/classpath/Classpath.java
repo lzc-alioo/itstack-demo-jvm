@@ -1,5 +1,6 @@
 package org.itstack.demo.jvm.classpath;
 
+import org.itstack.demo.jvm.classfile.ClassInfo;
 import org.itstack.demo.jvm.classpath.impl.WildcardEntry;
 
 import java.io.File;
@@ -77,6 +78,29 @@ public class Classpath {
 
         //[readClass]用户类路径
         return userClasspath.readClass(className);
+    }
+
+    public ClassInfo readClass2ClassInfo(String className) throws Exception {
+        className = className + ".class";
+
+        //[readClass]启动类路径
+        try {
+            return bootstrapClasspath.readClass2ClassInfo(className);
+        } catch (Exception ignored) {
+            //ignored
+        }
+
+        //[readClass]扩展类路径
+        try {
+            return extensionClasspath.readClass2ClassInfo(className);
+        } catch (Exception ignored) {
+            //ignored
+        }
+
+        //[readClass]用户类路径
+        return userClasspath.readClass2ClassInfo(className);
+
+
     }
 
 }
