@@ -1,4 +1,4 @@
-package org.itstack.demo.jvm.lzc;
+package com.lzc.wuxin.util;
 
 import org.itstack.demo.jvm.rtda.heap.methodarea.Class;
 import org.itstack.demo.jvm.rtda.heap.methodarea.Field;

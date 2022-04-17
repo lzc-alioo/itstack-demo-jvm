@@ -1,4 +1,4 @@
-package org.itstack.demo.jvm.lzc;
+package com.lzc.wuxin.util;
 
 import org.apache.commons.lang3.StringUtils;
 import org.itstack.demo.jvm.rtda.heap.constantpool.*;
@@ -35,6 +35,14 @@ public class ConstantPoolUtil {
             StringBuilder sb = new StringBuilder(StringUtils.rightPad("StringRef", 20));
             sb.append(StringUtils.rightPad("#" + ref.strIdx, 30));
             sb.append(StringUtils.rightPad("// " + ref.str, 40));
+            return sb.toString();
+        }
+        if (obj instanceof NameAndTypeRef) {
+            NameAndTypeRef ref = (NameAndTypeRef) obj;
+
+            StringBuilder sb = new StringBuilder(StringUtils.rightPad("NameAndType", 20));
+            sb.append(StringUtils.rightPad("#" + ref.nameIdx+":"+"#" + ref.descIdx, 30));
+            sb.append(StringUtils.rightPad("// " + ref.name+ ":" + ref.descriptor, 40));
             return sb.toString();
         }
         if (obj instanceof ClassRef) {

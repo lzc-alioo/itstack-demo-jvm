@@ -1,5 +1,6 @@
-package org.itstack.demo.jvm.lzc;
+package com.lzc.wuxin;
 
+import com.lzc.wuxin.util.*;
 import org.itstack.demo.jvm.rtda.heap.methodarea.Field;
 import org.itstack.demo.jvm.rtda.heap.methodarea.Method;
 import org.itstack.demo.jvm.rtda.heap.methodarea.Class;
@@ -41,7 +42,7 @@ public class Jad {
         Method clinitMethod = clazz.getClinitMethod();
         for (Method memberInfo : clazz.methods) {
             //方法参数类型 方法返回值类型
-            MethodInfo methodInfo = MethodDescriptorUtil.getMethodInfo(memberInfo, simpleClassName,clinitMethod.equals(memberInfo));
+            MethodInfo methodInfo = MethodDescriptorUtil.getMethodInfo(memberInfo);
             buf.append(memberInfo.deprecated ? "@Deprecated " : "")
                     .append(AccessFlagsUtil.getAccessFlagsStr(memberInfo.accessFlags))
                     .append(methodInfo.getValueType())

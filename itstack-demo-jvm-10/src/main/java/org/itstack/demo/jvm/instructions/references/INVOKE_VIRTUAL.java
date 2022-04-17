@@ -18,7 +18,7 @@ public class INVOKE_VIRTUAL extends InstructionIndex16 {
         Class currentClass = frame.method().clazz();
         RunTimeConstantPool runTimeConstantPool = currentClass.constantPool();
         MethodRef methodRef = (MethodRef) runTimeConstantPool.getConstants(this.idx);
-        Method resolvedMethod = methodRef.ResolvedMethod();
+        Method resolvedMethod = methodRef.resolvedMethod();
         if (resolvedMethod.isStatic()) {
             throw new IncompatibleClassChangeError();
         }

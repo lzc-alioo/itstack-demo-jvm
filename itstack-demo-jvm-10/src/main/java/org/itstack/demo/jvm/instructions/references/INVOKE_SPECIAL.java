@@ -18,7 +18,7 @@ public class INVOKE_SPECIAL extends InstructionIndex16 {
         RunTimeConstantPool runTimeConstantPool = currentClass.constantPool();
         MethodRef methodRef = (MethodRef) runTimeConstantPool.getConstants(this.idx);
         Class resolvedClass = methodRef.resolvedClass();
-        Method resolvedMethod = methodRef.ResolvedMethod();
+        Method resolvedMethod = methodRef.resolvedMethod();
         if ("<init>".equals(resolvedMethod.name()) && resolvedMethod.clazz() != resolvedClass) {
             throw new NoSuchMethodError();
         }

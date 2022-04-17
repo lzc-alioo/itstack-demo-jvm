@@ -1,4 +1,4 @@
-package org.itstack.demo.jvm.lzc;
+package com.lzc.wuxin.util;
 
 /**
  * @author: 悟心

@@ -10,7 +10,9 @@ public class SymRef {
     public int nameIdx;
 
     public Class resolvedClass() {
-        if (null != this.clazz) return this.clazz;
+        if (null != this.clazz) {
+            return this.clazz;
+        }
         Class d = this.runTimeConstantPool.getClazz();
         Class c = d.loader.loadClass(this.className);;
         this.clazz = c;

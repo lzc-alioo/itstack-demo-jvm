@@ -1,4 +1,4 @@
-package org.itstack.demo.jvm.lzc;
+package com.lzc.wuxin.util;
 
 import org.itstack.demo.jvm.rtda.heap.methodarea.Method;
 
@@ -18,21 +18,15 @@ import static java.util.regex.Pattern.compile;
  */
 public class MethodDescriptorUtil {
 
-    public static MethodInfo getMethodInfo(Method memberInfo, String simpleClassName, boolean isClinitMethod) {
-        return getMethodInfo(memberInfo.name(), memberInfo.descriptor(), simpleClassName, isClinitMethod);
-    }
+    public static MethodInfo getMethodInfo(Method memberInfo) {
+        String className = memberInfo.clazz.name.replaceAll("/", ".");
+        String simpleClassName = className.substring(className.lastIndexOf(".") + 1);
 
-
-//
-//    public static MethodInfo getMethodInfo(MemberInfo memberInfo, String simpleClassName) {
-//        return getMethodInfo(memberInfo.name(),memberInfo.descriptor(),simpleClassName);
-//    }
-
-    public static MethodInfo getMethodInfo(String originMethodName, String descriptor, String simpleClassName, boolean isClinitMethod) {
-        String methodName = readAbleMethodName(originMethodName, simpleClassName);
+        String methodName = readAbleMethodName(memberInfo.name(), simpleClassName);
+        boolean isClinitMethod = memberInfo.clazz.getClinitMethod().equals(memberInfo);
         boolean isConstruction = methodName.equals(simpleClassName) ? true : false;
 
-        Matcher matcher = compile("(\\(.*\\))(.*)").matcher(descriptor);
+        Matcher matcher = compile("(\\(.*\\))(.*)").matcher(memberInfo.descriptor());
         boolean flag = matcher.find();
         if (!flag) {
             return new MethodInfo();

@@ -1,20 +1,24 @@
-package org.itstack.demo.jvm.lzc;
+package com.lzc.wuxin.util;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+
 /**
  * @author: 悟心
- * @time: 2022/4/15 00:22
+ * @time: 2022/4/4 21:46
  * @description:
  */
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class ClassInfo {
-    long lastModified;
-    String md5CheckSum;
+public class MethodInfo {
+   private String methodName ;
+   private boolean isConstruction ;
+   private String paramType ;
+   private String valueType ;
+
 }

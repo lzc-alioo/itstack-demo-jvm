@@ -19,7 +19,7 @@ public class INVOKE_STATIC extends InstructionIndex16 {
     public void execute(Frame frame) {
         RunTimeConstantPool runTimeConstantPool = frame.method().clazz().constantPool();
         MethodRef methodRef = (MethodRef) runTimeConstantPool.getConstants(this.idx);
-        Method resolvedMethod = methodRef.ResolvedMethod();
+        Method resolvedMethod = methodRef.resolvedMethod();
 
         if (!resolvedMethod.isStatic()) {
             throw new IncompatibleClassChangeError();

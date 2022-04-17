@@ -26,6 +26,9 @@ public class Class {
     public Object jClass;
     public boolean deprecated;
 
+    public Class() {
+    }
+
     public Class(ClassFile classFile) {
         this.accessFlags = classFile.accessFlags();
         this.name = classFile.className();

@@ -16,7 +16,7 @@ public class MethodRef extends MemberRef {
         return ref;
     }
 
-    public Method ResolvedMethod() {
+    public Method resolvedMethod() {
         if (null == this.method) {
             this.resolveMethodRef();
         }

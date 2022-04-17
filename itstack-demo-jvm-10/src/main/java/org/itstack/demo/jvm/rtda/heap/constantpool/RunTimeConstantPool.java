@@ -45,6 +45,14 @@ public class RunTimeConstantPool {
                     ConstantStringInfo stringInfo = (ConstantStringInfo) constantInfo;
                     this.constants[i] = stringInfo.string();
                     break;
+                case ConstantInfo.CONSTANT_TAG_UTF8:
+                    ConstantUtf8Info utf8Info = (ConstantUtf8Info) constantInfo;
+                    this.constants[i] = utf8Info.str();
+                    break;
+                case ConstantInfo.CONSTANT_TAG_NAMEANDTYPE:
+                    ConstantNameAndTypeInfo nameAndTypeInfo = (ConstantNameAndTypeInfo) constantInfo;
+                    this.constants[i] = NameAndTypeRef.newNameAndTypeRef( constantPool,nameAndTypeInfo);
+                    break;
                 case ConstantInfo.CONSTANT_TAG_CLASS:
                     ConstantClassInfo classInfo = (ConstantClassInfo) constantInfo;
                     this.constants[i] = ClassRef.newClassRef(this, classInfo);

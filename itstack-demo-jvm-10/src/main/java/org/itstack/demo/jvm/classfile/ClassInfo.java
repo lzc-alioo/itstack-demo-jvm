@@ -17,6 +17,8 @@ public class ClassInfo {
     public String md5;
     public String classFromPath;
 
+    public ClassFile classFile;
+
     public ClassInfo(byte[] classData, File classFile) {
         this.classData = classData;
         this.lastModified = classFile.lastModified();
@@ -24,5 +26,6 @@ public class ClassInfo {
         this.classFromPath = classFile.getPath();
         this.md5 = Md5Util.encode(classData);
 
+        this.classFile = new ClassFile(classData);
     }
 }
