@@ -1,8 +1,8 @@
 package org.itstack.demo.jvm.lzc;
 
+import org.itstack.demo.jvm.rtda.heap.methodarea.Class;
 import org.itstack.demo.jvm.rtda.heap.methodarea.Field;
 import org.itstack.demo.jvm.rtda.heap.methodarea.Method;
-import org.itstack.demo.jvm.rtda.heap.methodarea.Class;
 
 import java.util.Optional;
 

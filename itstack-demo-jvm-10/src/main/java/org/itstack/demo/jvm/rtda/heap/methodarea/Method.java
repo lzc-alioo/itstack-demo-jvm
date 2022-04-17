@@ -15,6 +15,7 @@ public class Method extends ClassMember {
     private ExceptionTable exceptionTable;
     private LineNumberTableAttribute lineNumberTable;
     private int argSlotCount;
+    public boolean deprecated;
 
     Method[] newMethods(Class clazz, MemberInfo[] cfMethods) {
         Method[] methods = new Method[cfMethods.length];

@@ -7,6 +7,7 @@ public class SymRef {
     public RunTimeConstantPool runTimeConstantPool;
     public String className;
     public Class clazz;
+    public int nameIdx;
 
     public Class resolvedClass() {
         if (null != this.clazz) return this.clazz;

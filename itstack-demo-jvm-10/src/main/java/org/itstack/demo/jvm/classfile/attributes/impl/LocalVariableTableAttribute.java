@@ -9,7 +9,7 @@ import org.itstack.demo.jvm.classfile.attributes.AttributeInfo;
  */
 public class LocalVariableTableAttribute implements AttributeInfo {
 
-    private LocalVariableTableEntry[] localVariableTable;
+    public LocalVariableTableEntry[] localVariableTable;
 
     @Override
     public void readInfo(ClassReader reader) {
@@ -20,13 +20,17 @@ public class LocalVariableTableAttribute implements AttributeInfo {
         }
     }
 
-    static class LocalVariableTableEntry {
+    public LocalVariableTableEntry[] getLocalVariableTable() {
+        return localVariableTable;
+    }
 
-        private int startPC;
-        private int length;
-        private int nameIdx;
-        private int descriptorIdx;
-        private int idx;
+    public static class LocalVariableTableEntry {
+
+       public int startPC;
+       public int length;
+       public int nameIdx;
+       public int descriptorIdx;
+       public int idx;
 
         LocalVariableTableEntry(int startPC, int length, int nameIdx, int descriptorIdx, int idx) {
             this.startPC = startPC;

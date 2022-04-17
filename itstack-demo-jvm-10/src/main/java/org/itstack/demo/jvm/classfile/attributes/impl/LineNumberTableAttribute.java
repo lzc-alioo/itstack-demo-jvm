@@ -30,9 +30,13 @@ public class LineNumberTableAttribute implements AttributeInfo {
         return -1;
     }
 
-    static class LineNumberTableEntry {
-        private int startPC;
-        private int lineNumber;
+    public LineNumberTableEntry[] getLineNumberTable() {
+        return lineNumberTable;
+    }
+
+    public static class LineNumberTableEntry {
+        public int startPC;
+        public int lineNumber;
 
         LineNumberTableEntry(int startPC, int lineNumber) {
             this.startPC = startPC;

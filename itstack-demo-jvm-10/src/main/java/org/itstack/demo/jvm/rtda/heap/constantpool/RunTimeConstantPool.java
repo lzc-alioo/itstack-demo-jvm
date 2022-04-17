@@ -11,7 +11,7 @@ import org.itstack.demo.jvm.rtda.heap.methodarea.Class;
 public class RunTimeConstantPool {
 
     private Class clazz;
-    private java.lang.Object[] constants;
+    public java.lang.Object[] constants;
 
     public RunTimeConstantPool(Class clazz, ConstantPool constantPool) {
         int cpCount = constantPool.getConstantInfos().length;

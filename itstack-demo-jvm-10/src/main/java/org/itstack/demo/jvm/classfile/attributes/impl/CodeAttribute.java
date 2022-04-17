@@ -11,11 +11,11 @@ import org.itstack.demo.jvm.classfile.constantpool.ConstantPool;
 public class CodeAttribute implements AttributeInfo {
 
     private ConstantPool constantPool;
-    private int maxStack;
-    private int maxLocals;
-    private byte[] data;
-    private ExceptionTableEntry[] exceptionTable;
-    private AttributeInfo[] attributes;
+    public int maxStack;
+    public int maxLocals;
+    public byte[] data;
+    public ExceptionTableEntry[] exceptionTable;
+    public AttributeInfo[] attributes;
 
     public CodeAttribute(ConstantPool constantPool) {
         this.constantPool = constantPool;
@@ -51,6 +51,15 @@ public class CodeAttribute implements AttributeInfo {
         for (AttributeInfo attrInfo : this.attributes) {
             if (attrInfo instanceof LineNumberTableAttribute) {
                 return (LineNumberTableAttribute) attrInfo;
+            }
+        }
+        return null;
+    }
+
+    public LocalVariableTableAttribute localVariableTableAttribute() {
+        for (AttributeInfo attrInfo : attributes) {
+            if (attrInfo instanceof LocalVariableTableAttribute) {
+                return (LocalVariableTableAttribute) attrInfo;
             }
         }
         return null;

@@ -24,6 +24,7 @@ public class Class {
     public Slots staticVars;
     public boolean initStarted;
     public Object jClass;
+    public boolean deprecated;
 
     public Class(ClassFile classFile) {
         this.accessFlags = classFile.accessFlags();

@@ -19,7 +19,7 @@ public class ClassFile {
     private int[] interfaces;
     private MemberInfo[] fields;
     private MemberInfo[] methods;
-    private AttributeInfo[] attributes;
+    public AttributeInfo[] attributes;
 
     public ClassFile(byte[] classData) {
         ClassReader reader = new ClassReader(classData);

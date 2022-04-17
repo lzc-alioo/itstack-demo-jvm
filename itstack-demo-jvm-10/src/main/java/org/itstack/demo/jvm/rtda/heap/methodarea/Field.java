@@ -9,6 +9,8 @@ public class Field extends ClassMember {
     public int constValueIndex;
     public int slotId;
 
+    public boolean deprecated;
+
     public Field[] newFields(Class clazz, MemberInfo[] cfFields) {
         Field[] fields = new Field[cfFields.length];
         for (int i = 0; i < cfFields.length; i++) {
