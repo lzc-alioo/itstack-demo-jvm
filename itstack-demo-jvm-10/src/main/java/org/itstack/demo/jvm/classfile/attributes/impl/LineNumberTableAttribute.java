@@ -9,7 +9,7 @@ import org.itstack.demo.jvm.classfile.attributes.AttributeInfo;
  */
 public class LineNumberTableAttribute implements AttributeInfo {
 
-    private LineNumberTableEntry[] lineNumberTable;
+    public LineNumberTableEntry[] lineNumberTable;
 
     @Override
     public void readInfo(ClassReader reader) {
@@ -30,9 +30,6 @@ public class LineNumberTableAttribute implements AttributeInfo {
         return -1;
     }
 
-    public LineNumberTableEntry[] getLineNumberTable() {
-        return lineNumberTable;
-    }
 
     public static class LineNumberTableEntry {
         public int startPC;

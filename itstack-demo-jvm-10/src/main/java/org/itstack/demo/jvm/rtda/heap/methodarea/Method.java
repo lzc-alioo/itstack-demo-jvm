@@ -3,6 +3,7 @@ package org.itstack.demo.jvm.rtda.heap.methodarea;
 import org.itstack.demo.jvm.classfile.MemberInfo;
 import org.itstack.demo.jvm.classfile.attributes.impl.CodeAttribute;
 import org.itstack.demo.jvm.classfile.attributes.impl.LineNumberTableAttribute;
+import org.itstack.demo.jvm.classfile.attributes.impl.LocalVariableTableAttribute;
 import org.itstack.demo.jvm.rtda.heap.constantpool.AccessFlags;
 
 import java.util.List;
@@ -13,7 +14,8 @@ public class Method extends ClassMember {
     public int maxLocals;
     public byte[] code;
     private ExceptionTable exceptionTable;
-    private LineNumberTableAttribute lineNumberTable;
+    public LineNumberTableAttribute lineNumberTableAttribute;
+    public LocalVariableTableAttribute localVariableTableAttribute;
     private int argSlotCount;
     public boolean deprecated;
 
@@ -71,7 +73,8 @@ public class Method extends ClassMember {
             this.maxStack = codeAttr.maxStack();
             this.maxLocals = codeAttr.maxLocals();
             this.code = codeAttr.data();
-            this.lineNumberTable = codeAttr.lineNumberTableAttribute();
+            this.lineNumberTableAttribute = codeAttr.lineNumberTableAttribute();
+            this.localVariableTableAttribute = codeAttr.localVariableTableAttribute();
             this.exceptionTable = new ExceptionTable(codeAttr.exceptionTable(), this.clazz.constantPool());
         }
     }
@@ -138,8 +141,8 @@ public class Method extends ClassMember {
 
     public int getLineNumber(int pc) {
         if (this.isNative()) return -2;
-        if (this.lineNumberTable == null) return -1;
-        return this.lineNumberTable.getLineNumber(pc);
+        if (this.lineNumberTableAttribute == null) return -1;
+        return this.lineNumberTableAttribute.getLineNumber(pc);
     }
 
 }

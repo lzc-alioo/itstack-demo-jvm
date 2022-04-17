@@ -4,7 +4,11 @@ import com.lzc.wuxin.util.*;
 import org.apache.commons.lang3.StringUtils;
 import org.itstack.demo.jvm.Cmd;
 import org.itstack.demo.jvm.classfile.ClassInfo;
+import org.itstack.demo.jvm.classfile.attributes.impl.LineNumberTableAttribute;
+import org.itstack.demo.jvm.classfile.attributes.impl.LocalVariableTableAttribute;
 import org.itstack.demo.jvm.classpath.Classpath;
+import org.itstack.demo.jvm.instructions.Factory;
+import org.itstack.demo.jvm.instructions.base.Instruction;
 import org.itstack.demo.jvm.rtda.heap.ClassLoader;
 import org.itstack.demo.jvm.rtda.heap.methodarea.Class;
 import org.itstack.demo.jvm.rtda.heap.methodarea.Field;
@@ -78,18 +82,36 @@ public class Jad2 {
         }
         buf.append("\n");
 
-        for (Method memberInfo : clazz.methods) {
+        for (Method method : clazz.methods) {
             //方法参数类型 方法返回值类型
-            MethodInfo methodInfo = MethodDescriptorUtil.getMethodInfo(memberInfo);
-            buf.append("  ").append(AccessFlagsUtil.getAccessFlagsStr(memberInfo.accessFlags)).append(methodInfo.getValueType()).append(methodInfo.getMethodName()).append(methodInfo.getParamType()).append(";\n");
-            buf.append("    descriptor:").append(memberInfo.descriptor).append("\n");
+            MethodInfo methodInfo = MethodDescriptorUtil.getMethodInfo(method);
+            buf.append("  ").append(AccessFlagsUtil.getAccessFlagsStr(method.accessFlags)).append(methodInfo.getValueType()).append(methodInfo.getMethodName()).append(methodInfo.getParamType()).append(";\n");
+            buf.append("    descriptor:").append(method.descriptor).append("\n");
             buf.append("    flags: ").append(AccessFlagsUtil.getAccessFlagsStr(clazz.accessFlags)).append("\n");
+
             buf.append("    Code: ").append("\n");
-            buf.append("      stack=").append(memberInfo.maxStack).append(", locals=").append(memberInfo.maxLocals).append(", args_size=").append(memberInfo.argSlotCount()).append("\n");
-
-            for(byte o:memberInfo.code){
-
+            buf.append("      stack=").append(method.maxStack).append(", locals=").append(method.maxLocals).append(", args_size=").append(method.argSlotCount()).append("\n");
+            for (byte opcode : method.code) {
+                Instruction inst = Factory.newInstruction(opcode);
+                buf.append("        ").append(InstructionUtil.readableInstruction(inst).toLowerCase()).append("\n");
             }
+            buf.append("      LineNumberTable:").append("\n");
+            for (LineNumberTableAttribute.LineNumberTableEntry lineNumber : method.lineNumberTableAttribute.lineNumberTable) {
+                buf.append("        line ").append(lineNumber.lineNumber).append(": ").append(lineNumber.startPC).append("\n");
+            }
+            buf.append("      LocalVariableTable:").append("\n");
+            buf.append("        Start  Length  Slot  Name   Signature").append("\n");
+            if(method.localVariableTableAttribute!=null && method.localVariableTableAttribute.localVariableTable!=null){
+                for (LocalVariableTableAttribute.LocalVariableTableEntry localVar : method.localVariableTableAttribute.localVariableTable) {
+                    buf.append(StringUtils.leftPad(localVar.startPC + "", 13))
+                            .append(StringUtils.leftPad(localVar.length + "", 8))
+                            .append(StringUtils.leftPad(localVar.idx + "", 6))
+                            .append(StringUtils.leftPad(clazz.runTimeConstantPool.getConstants(localVar.nameIdx) + "", 6)).append("   ")
+                            .append(StringUtils.rightPad(clazz.runTimeConstantPool.getConstants(localVar.descriptorIdx)+"" , 14))
+                            .append("\n");
+                }
+            }
+
 
         }
         buf.append("}");
