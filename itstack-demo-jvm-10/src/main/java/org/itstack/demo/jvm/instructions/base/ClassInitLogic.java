@@ -19,13 +19,17 @@ public class ClassInitLogic {
 
     private static void scheduleClinit(Thread thread, Class clazz) {
         Method clinit = clazz.getClinitMethod();
-        if (null == clinit) return;
+        if (null == clinit) {
+            return;
+        }
         Frame newFrame = thread.newFrame(clinit);
         thread.pushFrame(newFrame);
     }
 
     private static void initSuperClass(Thread thread, Class clazz) {
-        if (clazz.isInterface()) return;
+        if (clazz.isInterface()) {
+            return;
+        }
         Class superClass = clazz.superClass();
         if (null != superClass && !superClass.initStarted()) {
             initClass(thread, superClass);

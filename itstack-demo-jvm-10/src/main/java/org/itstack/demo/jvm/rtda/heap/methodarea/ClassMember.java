@@ -52,6 +52,11 @@ public class ClassMember {
         return this.clazz;
     }
 
+    /**
+     * 检测类d是否有权限访问当前类
+     * @param d
+     * @return
+     */
     public boolean isAccessibleTo(Class d) {
         if (this.isPublic()) {
             return true;

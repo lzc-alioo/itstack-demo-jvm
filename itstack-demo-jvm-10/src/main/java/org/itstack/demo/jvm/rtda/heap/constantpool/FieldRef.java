@@ -27,7 +27,9 @@ public class FieldRef extends MemberRef {
     }
 
     private void resolveFieldRef() throws NoSuchFieldException {
+        //当前字段归属类d
         Class d = this.runTimeConstantPool.getClazz();
+        //当前字段真实的类型c
         Class c = this.resolvedClass();
 
         Field field = this.lookupField(c, this.name, this.descriptor);
@@ -52,7 +54,9 @@ public class FieldRef extends MemberRef {
         if (null != c.interfaces) {
             for (Class iface : c.interfaces) {
                 Field field = lookupField(iface, name, descriptor);
-                if (null != field) return field;
+                if (null != field) {
+                    return field;
+                }
             }
         }
 

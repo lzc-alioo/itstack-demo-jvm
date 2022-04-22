@@ -1,5 +1,6 @@
 package org.itstack.demo.jvm.instructions.references;
 
+import org.itstack.demo.jvm.instructions.InstructionUtil;
 import org.itstack.demo.jvm.instructions.base.ClassInitLogic;
 import org.itstack.demo.jvm.instructions.base.InstructionIndex16;
 import org.itstack.demo.jvm.instructions.base.MethodInvokeLogic;

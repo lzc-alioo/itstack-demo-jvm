@@ -60,7 +60,9 @@ public class ClassLoader {
 
     public Class loadClass(String className) {
         Class clazz = classMap.get(className);
-        if (null != clazz) return clazz;
+        if (null != clazz) {
+            return clazz;
+        }
 
         //'['数组标识
         if (className.getBytes()[0] == '[') {

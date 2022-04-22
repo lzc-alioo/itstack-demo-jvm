@@ -23,7 +23,7 @@ public class Field extends ClassMember {
     }
 
     public void copyAttributes(MemberInfo cfField) {
-        ConstantValueAttribute valAttr = cfField.ConstantValueAttribute();
+        ConstantValueAttribute valAttr = cfField.constantValueAttribute();
         if (null != valAttr) {
             this.constValueIndex = valAttr.constantValueIdx();
         }
@@ -53,4 +53,8 @@ public class Field extends ClassMember {
         return this.descriptor.equals("J") || this.descriptor.equals("D");
     }
 
+    @Override
+    public String toString() {
+        return "// Field "   + name +  ":"   + descriptor ;
+    }
 }

@@ -6,7 +6,13 @@ package org.itstack.demo.test;
 public class HelloWorld {
 
     public static void main(String[] args) {
-        throw new RuntimeException("自定义异常");
+        int sum = 0;
+        for (int i = 1; i <= 10; i++) {
+            Byte abc=5;
+            sum += i;
+        }
+
+//        throw new RuntimeException("自定义异常");
     }
 
 }

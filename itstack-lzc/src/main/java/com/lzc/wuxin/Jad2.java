@@ -3,12 +3,18 @@ package com.lzc.wuxin;
 import com.lzc.wuxin.util.*;
 import org.apache.commons.lang3.StringUtils;
 import org.itstack.demo.jvm.Cmd;
+import org.itstack.demo.jvm._native.Registry;
 import org.itstack.demo.jvm.classfile.ClassInfo;
 import org.itstack.demo.jvm.classfile.attributes.impl.LineNumberTableAttribute;
 import org.itstack.demo.jvm.classfile.attributes.impl.LocalVariableTableAttribute;
 import org.itstack.demo.jvm.classpath.Classpath;
 import org.itstack.demo.jvm.instructions.Factory;
+import org.itstack.demo.jvm.instructions.base.BytecodeReader;
 import org.itstack.demo.jvm.instructions.base.Instruction;
+import org.itstack.demo.jvm.rtda.Frame;
+import org.itstack.demo.jvm.rtda.OperandStack;
+import org.itstack.demo.jvm.rtda.Slot;
+import org.itstack.demo.jvm.rtda.Thread;
 import org.itstack.demo.jvm.rtda.heap.ClassLoader;
 import org.itstack.demo.jvm.rtda.heap.methodarea.Class;
 import org.itstack.demo.jvm.rtda.heap.methodarea.Field;
@@ -91,10 +97,41 @@ public class Jad2 {
 
             buf.append("    Code: ").append("\n");
             buf.append("      stack=").append(method.maxStack).append(", locals=").append(method.maxLocals).append(", args_size=").append(method.argSlotCount()).append("\n");
-            for (byte opcode : method.code) {
+
+            System.out.print(buf.toString());
+            buf.delete(0, buf.length());
+
+            Thread thread = new Thread();
+            Frame frame = thread.newFrame(method);
+            thread.pushFrame(frame);
+            Registry.initNative();
+
+
+            byte[] code = method.code;
+            BytecodeReader reader=new BytecodeReader();
+            reader.reset(code,0);
+            while (true){
+                byte opcode =reader.readByte();
                 Instruction inst = Factory.newInstruction(opcode);
-                buf.append("        ").append(InstructionUtil.readableInstruction(inst).toLowerCase()).append("\n");
+                inst.fetchOperands(reader);
+
+                inst.execute(frame);
+
+                buf.append("        ")
+                        .append(InstructionUtil.readableInstruction(inst, opcode).toLowerCase())
+//                        .append("    ")
+//                        .append(readAbleSlots(frame.operandStack()))
+                        .append("\n");
+
+                if (thread.isStackEmpty() ||  reader.pc() > code.length-1) {
+                    break;
+                }
+
+                System.out.print(buf.toString());
+                buf.delete(0, buf.length());
             }
+
+
             buf.append("      LineNumberTable:").append("\n");
             for (LineNumberTableAttribute.LineNumberTableEntry lineNumber : method.lineNumberTableAttribute.lineNumberTable) {
                 buf.append("        line ").append(lineNumber.lineNumber).append(": ").append(lineNumber.startPC).append("\n");
@@ -117,5 +154,18 @@ public class Jad2 {
         buf.append("}");
 
         System.out.println(buf.toString());
+    }
+
+
+    private static String readAbleSlots(OperandStack operandStack){
+        StringBuilder sb = new StringBuilder();
+        Slot[] slots = operandStack.getSlots();
+        for (int i = 0; i < operandStack.getSize(); i++) {
+            Slot slot = slots[i];
+            sb.append(" ").append(slot.num);
+        }
+
+        return sb.toString();
+
     }
 }

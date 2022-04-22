@@ -8,9 +8,9 @@ import org.itstack.demo.jvm.instructions.base.Instruction;
  * @description:
  */
 public class InstructionUtil {
-    public static String readableInstruction(Instruction inst ){
+    public static String readableInstruction(Instruction inst,byte opcode ){
         if(inst==null){
-            return "UNKOWN";
+            return "UNKOWN["+String.format("0x%x",opcode)+":"+opcode+"]";
         }
         return inst.getClass().getSimpleName();
     }

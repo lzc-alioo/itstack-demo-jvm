@@ -14,7 +14,7 @@ public class ConstantFieldRefInfo extends ConstantMemberRefInfo {
 
     @Override
     public int tag() {
-        return this.CONSTANT_TAG_FIELDREF;
+        return CONSTANT_TAG_FIELDREF;
     }
 
 }

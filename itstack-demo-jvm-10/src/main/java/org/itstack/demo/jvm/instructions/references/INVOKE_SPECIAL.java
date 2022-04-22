@@ -27,9 +27,10 @@ public class INVOKE_SPECIAL extends InstructionIndex16 {
         }
 
         Object ref = frame.operandStack().getRefFromTop(resolvedMethod.argSlotCount() - 1);
-        if (null == ref) {
-            throw new NullPointerException();
-        }
+        //lzc modified 20220420,不注释掉这部分的话，执行构造方法时会因为ref值为null而报NullPointerException错误
+//        if (null == ref) {
+//            throw new NullPointerException();
+//        }
 
         if (resolvedMethod.isProtected() &&
                 resolvedMethod.clazz().isSubClassOf(currentClass) &&

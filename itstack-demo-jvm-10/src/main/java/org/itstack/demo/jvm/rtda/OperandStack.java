@@ -109,4 +109,8 @@ public class OperandStack {
     public Slot[] getSlots() {
         return slots;
     }
+
+    public int getSize() {
+        return size;
+    }
 }

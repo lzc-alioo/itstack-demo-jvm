@@ -39,6 +39,10 @@ public class Main {
         }
         new Interpret(mainMethod, cmd.verboseClassFlag, cmd.args);
 
+        Method initMethod=mainClass.getStaticMethod("<init>", "()V", false);
+        System.out.println("initMethod:"+initMethod);
+
+//        new Interpret(initMethod, cmd.verboseClassFlag, cmd.args);
 
     }
 

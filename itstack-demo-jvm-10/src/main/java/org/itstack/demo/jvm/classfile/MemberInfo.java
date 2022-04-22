@@ -55,7 +55,7 @@ public class MemberInfo {
         return null;
     }
 
-    public ConstantValueAttribute ConstantValueAttribute() {
+    public ConstantValueAttribute constantValueAttribute() {
         for (AttributeInfo attrInfo : attributes) {
             if (attrInfo instanceof ConstantValueAttribute) return (ConstantValueAttribute) attrInfo;
         }

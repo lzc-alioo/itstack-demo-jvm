@@ -140,9 +140,17 @@ public class Method extends ClassMember {
     }
 
     public int getLineNumber(int pc) {
-        if (this.isNative()) return -2;
-        if (this.lineNumberTableAttribute == null) return -1;
+        if (this.isNative()) {
+            return -2;
+        }
+        if (this.lineNumberTableAttribute == null) {
+            return -1;
+        }
         return this.lineNumberTableAttribute.getLineNumber(pc);
     }
 
+    @Override
+    public String toString() {
+        return "// Method " + clazz.name + "." + name + ":" + descriptor;
+    }
 }

@@ -11,8 +11,14 @@ import org.itstack.demo.jvm.classfile.constantpool.ConstantPool;
 public class CodeAttribute implements AttributeInfo {
 
     private ConstantPool constantPool;
+    /**
+     * maxStack和maxLocals字段分别存放操作数栈和局部变量表大小，这两个值是由Java编译器计算好的。
+     */
     public int maxStack;
     public int maxLocals;
+    /**
+     * code字段存放方法字节码。
+     */
     public byte[] data;
     public ExceptionTableEntry[] exceptionTable;
     public AttributeInfo[] attributes;

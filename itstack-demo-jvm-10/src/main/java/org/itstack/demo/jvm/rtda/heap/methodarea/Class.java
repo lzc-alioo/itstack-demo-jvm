@@ -105,10 +105,6 @@ public class Class {
         return name;
     }
 
-    public RunTimeConstantPool runTimeConstantPool() {
-        return runTimeConstantPool;
-    }
-
     public Field[] fields() {
         return fields;
     }
@@ -151,7 +147,9 @@ public class Class {
 
     public String getPackageName() {
         int i = this.name.lastIndexOf("/");
-        if (i >= 0) return this.name.substring(0, i);
+        if (i >= 0) {
+            return this.name.substring(0, i);
+        }
         return "";
     }
 
@@ -163,7 +161,7 @@ public class Class {
         return this.getStaticMethod("<clinit>", "()V", true);
     }
 
-    private Method getStaticMethod(String name, String descriptor, boolean isStatic) {
+    public Method getStaticMethod(String name, String descriptor, boolean isStatic) {
         for (Class c = this; c != null; c = c.superClass) {
             if (null == c.methods) continue;
             for (Method method : c.methods) {
@@ -174,6 +172,8 @@ public class Class {
         }
         throw new RuntimeException("method not find: " + name + " " + descriptor);
     }
+
+
 
     public boolean isAssignableFrom(Class other) {
         if (this == other) return true;

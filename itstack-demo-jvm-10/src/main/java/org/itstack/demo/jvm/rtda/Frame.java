@@ -60,4 +60,11 @@ public class Frame {
         this.nextPC = this.thread.pc();
     }
 
+    @Override
+    public String toString() {
+        return "Frame{" +
+                "method=" + method +
+                ", nextPC=" + nextPC +
+                '}';
+    }
 }

@@ -1,5 +1,7 @@
 package org.itstack.demo.jvm.instructions.references;
 
+import org.apache.commons.lang3.StringUtils;
+import org.itstack.demo.jvm.instructions.InstructionUtil;
 import org.itstack.demo.jvm.instructions.base.ClassInitLogic;
 import org.itstack.demo.jvm.instructions.base.InstructionIndex16;
 import org.itstack.demo.jvm.rtda.Frame;
@@ -20,6 +22,7 @@ public class PUT_STATIC extends InstructionIndex16 {
         RunTimeConstantPool runTimeConstantPool = currentClazz.constantPool();
         FieldRef fieldRef = (FieldRef) runTimeConstantPool.getConstants(this.idx);
         Field field = fieldRef.resolvedField();
+
         Class clazz = field.clazz();
         if (!clazz.initStarted()) {
             frame.revertNextPC();

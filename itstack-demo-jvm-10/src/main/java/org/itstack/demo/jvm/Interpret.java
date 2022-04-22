@@ -82,7 +82,9 @@ class Interpret {
     }
 
     private static String byteToHexString(byte[] codes) {
-        if (null == codes) return "";
+        if (null == codes) {
+            return "";
+        }
         StringBuilder sb = new StringBuilder();
         sb.append("0x");
         for (byte b : codes) {
